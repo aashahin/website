@@ -1,0 +1,106 @@
+/* Work Section */
+.work-section {
+    padding: 6rem 0;
+    background-color: white;
+}
+
+.projects-list {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.project-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.project-content {
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.project-card:hover .project-content {
+    background-color: var(--neutral-50);
+    border-color: var(--neutral-200);
+}
+
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.project-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.project-year {
+    font-size: 0.75rem;
+    color: var(--neutral-500);
+}
+
+.project-status {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+}
+
+.project-status.completed {
+    background-color: var(--emerald-100);
+    color: var(--emerald-700);
+}
+
+.project-status.in-progress {
+    background-color: var(--blue-100);
+    color: var(--blue-700);
+}
+
+.project-icon {
+    color: var(--neutral-400);
+    transition: color 0.2s ease;
+}
+
+.project-card:hover .project-icon {
+    color: var(--neutral-600);
+}
+
+.project-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    color: var(--neutral-900);
+    transition: color 0.2s ease;
+}
+
+.project-card:hover .project-title {
+    color: var(--neutral-700);
+}
+
+.project-description {
+    color: var(--neutral-600);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: 0.875rem;
+}
+
+.project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+}
+
+.tech-tag {
+    font-size: 0.75rem;
+    color: var(--neutral-500);
+    background-color: var(--neutral-100);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}

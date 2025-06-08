@@ -1,0 +1,84 @@
+---
+import { Icon } from "astro-icon/components";
+import "../../styles/articles.css";
+
+const articles = [
+    {
+        title: "مستقبل تطوير الويب مع React 19",
+        excerpt:
+            "نظرة شاملة على الميزات الجديدة والتحسينات المتوقعة في الإصدار القادم من React",
+        date: "2024-06-05",
+        readTime: "8 دقائق",
+        category: "تطوير",
+    },
+    {
+        title: "أفضل ممارسات الأمان في تطبيقات Node.js",
+        excerpt: "دليل شامل لحماية تطبيقاتك من الثغرات الأمنية الشائعة",
+        date: "2024-05-28",
+        readTime: "12 دقيقة",
+        category: "أمان",
+    },
+    {
+        title: "بناء APIs قابلة للتوسع مع TypeScript",
+        excerpt: "استراتيجيات وأدوات لبناء واجهات برمجية قوية ومرنة",
+        date: "2024-05-15",
+        readTime: "10 دقائق",
+        category: "معمارية",
+    },
+];
+
+const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("ar", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+};
+---
+
+<section id="articles" class="articles-section">
+    <div class="section-container">
+        <div class="section-grid">
+            <div class="section-header">
+                <div class="section-header-sticky">
+                    <h2 class="section-title">المقالات</h2>
+                    <div class="section-divider"></div>
+                    <p class="section-description">
+                        أشارك خبرتي وأفكاري حول تطوير البرمجيات والتقنيات الحديثة.
+                    </p>
+                </div>
+            </div>
+
+            <div class="articles-list">
+                {articles.map((article) => (
+                        <article class="article-card">
+                            <div class="article-content">
+                                <div class="article-meta">
+                                    <span class="article-category">{article.category}</span>
+                                    <div class="article-details">
+                                        <div class="article-detail">
+                                            <Icon name="tabler:calendar" size={12}/>
+                                            <span>{formatDate(article.date)}</span>
+                                        </div>
+                                        <div class="article-detail">
+                                            <Icon name="tabler:clock" size={12}/>
+                                            <span>{article.readTime}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h3 class="article-title">{article.title}</h3>
+                                <p class="article-excerpt">{article.excerpt}</p>
+
+                                <div class="article-read-more">
+                                    <span>اقرأ المزيد</span>
+                                    <Icon name="tabler:arrow-up-right" size={12}/>
+                                </div>
+                            </div>
+                        </article>
+                ))}
+            </div>
+        </div>
+    </div>
+</section>

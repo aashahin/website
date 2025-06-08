@@ -1,0 +1,170 @@
+---
+import {Icon} from 'astro-icon/components'
+import "../../styles/contact.css";
+---
+
+<section id="contact" class="contact-section" aria-labelledby="contact-title">
+    <div class="section-container">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h2 id="contact-title" class="section-title">لنتعاون معاً</h2>
+                <div class="section-divider" role="presentation" aria-hidden="true"></div>
+
+                <p class="contact-description">
+                    هل لديك مشروع في ذهنك؟ أم تريد مناقشة فكرة؟ أحب العمل على الأفكار
+                    المميزة والمشاريع المعقدة. لا تتردد في التواصل معي.
+                </p>
+
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <Icon name="tabler:mail" size={18} class="contact-icon" aria-hidden="true"/>
+                        <a href="mailto:contact@abdelrahman.co" class="contact-link" aria-label="إرسال بريد إلكتروني إلى contact@abdelrahman.co">
+                            contact@abdelrahman.co
+                        </a>
+                    </div>
+
+                    <div class="social-links" role="list" aria-label="روابط التواصل الاجتماعي">
+                        <a href="https://github.com/aashahin" class="social-link" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="ملف GitHub الشخصي (يفتح في نافذة جديدة)">
+                            <Icon name="tabler:brand-github" size={23} aria-hidden="true"/>
+                        </a>
+                        <a href="https://t.me/abshahin" class="social-link" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="التواصل عبر Telegram (يفتح في نافذة جديدة)">
+                            <Icon name="tabler:brand-telegram" size={23} aria-hidden="true"/>
+                        </a>
+                        <a href="https://wa.me/201119402478" class="social-link" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="التواصل عبر WhatsApp (يفتح في نافذة جديدة)">
+                            <Icon name="tabler:brand-whatsapp" size={23} aria-hidden="true"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form-container">
+                <form class="contact-form" novalidate aria-labelledby="contact-title">
+                    <div class="form-group">
+                        <label for="name" class="form-label">الاسم *</label>
+                        <input
+                                id="name"
+                                name="name"
+                                type="text"
+                                class="form-input"
+                                placeholder="اسمك الكامل"
+                                aria-describedby="name-error"
+                                required
+                                autocomplete="name"
+                        />
+                        <div id="name-error" class="error-message" aria-live="polite"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">البريد الإلكتروني *</label>
+                        <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                class="form-input"
+                                placeholder="email@example.com"
+                                aria-describedby="email-error"
+                                required
+                                autocomplete="email"
+                        />
+                        <div id="email-error" class="error-message" aria-live="polite"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject" class="form-label">الموضوع *</label>
+                        <input
+                                id="subject"
+                                name="subject"
+                                type="text"
+                                class="form-input"
+                                placeholder="موضوع الرسالة"
+                                aria-describedby="subject-error"
+                                required
+                        />
+                        <div id="subject-error" class="error-message" aria-live="polite"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message" class="form-label">الرسالة *</label>
+                        <textarea
+                                id="message"
+                                name="message"
+                                rows={4}
+                                class="form-textarea"
+                                placeholder="أخبرني عن مشروعك..."
+                                aria-describedby="message-error"
+                                required
+                        ></textarea>
+                        <div id="message-error" class="error-message" aria-live="polite"></div>
+                    </div>
+
+                    <button type="submit" class="form-submit" aria-describedby="submit-status">
+                        إرسال الرسالة
+                        <Icon name="tabler:arrow-up-right" size={16} aria-hidden="true"/>
+                    </button>
+                    <div id="submit-status" class="status-message" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('.contact-form');
+        const inputs = form!.querySelectorAll('input[required], textarea[required]');
+
+        // Real-time validation
+        inputs.forEach(input => {
+            input.addEventListener('blur', validateField);
+            input.addEventListener('input', clearError);
+        });
+
+        function validateField(e: any) {
+            const field = e.target;
+            const errorDiv = document.getElementById(field.id + '-error');
+
+            if (!field!.validity!.valid) {
+                errorDiv!.textContent = getErrorMessage(field);
+                errorDiv!.classList.add('show');
+                field.setAttribute('aria-invalid', 'true');
+            }
+        }
+
+        function clearError(e: any) {
+            const field = e.target;
+            const errorDiv = document.getElementById(field.id + '-error');
+
+            if (field.validity.valid) {
+                errorDiv!.textContent = '';
+                errorDiv!.classList.remove('show');
+                field.removeAttribute('aria-invalid');
+            }
+        }
+
+        function getErrorMessage(field: any) {
+            if (field.validity.valueMissing) {
+                return 'هذا الحقل مطلوب';
+            }
+            if (field.validity.typeMismatch && field.type === 'email') {
+                return 'يرجى إدخال عنوان بريد إلكتروني صحيح';
+            }
+            return 'يرجى إدخال قيمة صحيحة';
+        }
+
+        // Form submission
+        form!.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const statusDiv = document.getElementById('submit-status');
+            statusDiv!.textContent = 'جاري الإرسال...';
+            statusDiv!.className = 'status-message';
+
+            // Simulate form submission
+            setTimeout(() => {
+                statusDiv!.textContent = 'تم إرسال الرسالة بنجاح!';
+                statusDiv!.className = 'status-message success';
+                form!.reset();
+            }, 2000);
+        });
+    });
+</script>

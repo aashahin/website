@@ -1,0 +1,88 @@
+---
+import "../../styles/about.css";
+
+const skillCategories = {
+    "Frontend": [
+        "JavaScript", "TypeScript", "React", "Next.js",
+        "Tailwind", "Svelte", "Astro.js", "Qwik.js", "Remix.js"
+    ],
+    "Backend": [
+        "Node.js", "Bun.js", "Nest.js", "Python", "GraphQL", "WebSockets",
+        "JWT/OAuth2", "REST APIs", "Microservices", "Serverless", "Prisma", "Drizzle", "RabbitMQ", "Kafka"
+    ],
+    "Database": [
+        "PostgreSQL", "MySQL", "Sqlite", "MongoDB", "Chroma", "MeiliSearch", "Redis", "Dragonfly"
+    ],
+    "Mobile": [
+        "Flutter", "React Native"
+    ],
+    "DevOps": [
+        "Docker", "Linux", "Nginx", "Caddy", "Github", "Gitlab", "CI/CD", "Jenkins",
+        "AWS", "GCP", "DO", "Vercel", "Netlify", "Railway", "Turso"
+    ],
+    "AI/ML": [
+        "Hugging Face", "RAG Pipelines", "Langchain", "LlamaIndex", "OpenAI", "Vertex AI", "Vercel AI"
+    ]
+};
+---
+
+<section id="about" class="about-section">
+    <div class="section-container">
+        <div class="section-grid">
+            <div class="section-header">
+                <div class="section-header-sticky">
+                    <h2 class="section-title">نبذة عني</h2>
+                    <div class="section-divider"></div>
+                </div>
+            </div>
+
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        مهندس برمجيات متخصص في بناء تطبيقات الويب الحديثة. أعمل مع الأفراد والشركات
+                        الناشئة لتحويل أفكارهم إلى منتجات رقمية ناجحة.
+                    </p>
+                    <p>
+                        خبرتي تشمل تطوير الواجهات الأمامية والخلفية، تصميم قواعد البيانات،
+                        وبناء أنظمة قابلة للتوسع مع التركيز على الأمان والأداء.
+                    </p>
+                </div>
+
+                <div class="about-details">
+                    <div class="about-skills">
+                        <h3 class="details-title">التقنيات</h3>
+                        <div class="skills-categories">
+                            {Object.entries(skillCategories).map(([category, skills]) => (
+                                    <div class="skill-category">
+                                        <h4 class="category-title">{category}</h4>
+                                        <div class="skills-list">
+                                            {skills.map((skill) => (
+                                                    <span class="skill-item">{skill}</span>
+                                            ))}
+                                        </div>
+                                    </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div class="about-services">
+                        <h3 class="details-title">الخدمات</h3>
+                        <div class="services-list">
+                            {[
+                                "تطوير تطبيقات الويب",
+                                "تطوير تطبيقات الهواتف المحمولة",
+                                "تصميم واجهات المستخدم",
+                                "بناء APIs و المايكروسيرفس",
+                                "حلول الذكاء الاصطناعي",
+                                "استشارات تقنية",
+                                "تحسين الأداء والأمان",
+                            ].map((service) => (
+                                    <div class="service-item">{service}</div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,73 @@
+---
+import {ExternalLink} from "@lucide/astro";
+import "../../styles/work.css";
+
+const projects = [
+    {
+        title: "منصة التجارة الإلكترونية",
+        description: "حل متكامل مع تكامل المدفوعات وإدارة المخزون الذكي",
+        tech: ["React", "Node.js", "PostgreSQL"],
+        year: "2024",
+        status: "مكتمل",
+    },
+    {
+        title: "تطبيق إدارة المشاريع",
+        description: "أداة تعاونية مع تحديثات فورية ومشاركة الملفات",
+        tech: ["Next.js", "Express", "MongoDB"],
+        year: "2024",
+        status: "قيد التطوير",
+    },
+    {
+        title: "لوحة تحليلات البيانات",
+        description: "منصة ذكاء تجاري مع مخططات تفاعلية متقدمة",
+        tech: ["React", "Python", "FastAPI"],
+        year: "2023",
+        status: "مكتمل",
+    },
+];
+---
+
+{/* Work */}
+<section id="work" class="work-section">
+    <div class="section-container">
+        <div class="section-grid">
+            <div class="section-header">
+                <div class="section-header-sticky">
+                    <h2 class="section-title">أعمال مختارة</h2>
+                    <div class="section-divider"></div>
+                    <p class="section-description">
+                        مجموعة من المشاريع التي عملت عليها مؤخراً، تظهر خبرتي في التقنيات
+                        المختلفة.
+                    </p>
+                </div>
+            </div>
+
+            <div class="projects-list">
+                {projects.map((project) => (
+                        <div class="project-card">
+                            <div class="project-content">
+                                <div class="project-header">
+                                    <div class="project-meta">
+                                        <span class="project-year">{project.year}</span>
+                                        <span class={`project-status ${project.status === "مكتمل" ? "completed" : "in-progress"}`}>
+                                            {project.status}
+                                        </span>
+                                    </div>
+                                    <ExternalLink size={16} class="project-icon"/>
+                                </div>
+
+                                <h3 class="project-title">{project.title}</h3>
+                                <p class="project-description">{project.description}</p>
+
+                                <div class="project-tech">
+                                    {project.tech.map((tech) => (
+                                            <span class="tech-tag">{tech}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                ))}
+            </div>
+        </div>
+    </div>
+</section>

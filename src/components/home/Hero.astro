@@ -1,0 +1,37 @@
+---
+import {ArrowUpRight} from "@lucide/astro";
+import "../../styles/hero.css";
+---
+<section class="hero-section">
+    <div class="hero-container">
+        <div class="hero-content">
+            <div class="hero-badge-container">
+                <a href="/#contact" class="hero-badge">
+                    <div class="status-dot"></div>
+                    <span class="badge-text">إستشارة مجانية</span>
+                </a>
+            </div>
+
+            <h1 class="hero-title">عبدالرحمن شاهين
+                <span class="hero-subtitle">مهندس برمجيات</span>
+            </h1>
+
+            <p class="hero-description">
+                أبني تجارب رقمية استثنائية باستخدام أحدث التقنيات. متخصص في بناء أنظمة برمجية للأفراد والشركات الناشئة
+                مع خبرة 8+ سنوات.
+            </p>
+
+            <div class="hero-actions">
+                <a href="/#contact" class="btn-primary" aria-label="Contact me">
+                    لنتحدث
+                    <ArrowUpRight size={16}/>
+                </a>
+
+                <a href="/#work" class="btn-secondary" aria-label="View my work">
+                    مشاهدة الأعمال
+                    <ArrowUpRight size={14}/>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
