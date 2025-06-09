@@ -1,5 +1,5 @@
 ---
-import {ExternalLink} from "@lucide/astro";
+import { Icon } from "astro-icon/components";
 import "../../styles/work.css";
 
 const projects = [
@@ -53,7 +53,7 @@ const projects = [
                                             {project.status}
                                         </span>
                                     </div>
-                                    <ExternalLink size={16} class="project-icon"/>
+                                    <Icon name="tabler:external-link" size={16} class="project-icon"/>
                                 </div>
 
                                 <h3 class="project-title">{project.title}</h3>
