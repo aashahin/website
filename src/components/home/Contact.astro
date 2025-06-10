@@ -151,7 +151,7 @@ import "../../styles/contact.css";
   document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector(".contact-form");
     const inputs = form!.querySelectorAll(
-      "input[required], textarea[required]"
+        "input[required], textarea[required]"
     );
 
     // Real-time validation
@@ -198,7 +198,7 @@ import "../../styles/contact.css";
 
       const statusDiv = document.getElementById("submit-status");
       const submitButton = form!.querySelector(
-        ".form-submit"
+          ".form-submit"
       ) as HTMLButtonElement;
 
       // Get form data
@@ -235,7 +235,7 @@ import "../../styles/contact.css";
       submitButton.innerHTML = 'جاري الإرسال... <div class="spinner"></div>';
 
       try {
-        const response = await fetch("/api/send-email", {
+        const response = await fetch("https://resend-service.abshahin.workers.dev", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -246,9 +246,9 @@ import "../../styles/contact.css";
         const result = await response.json();
 
         if (result.success) {
-          statusDiv!.textContent = result.message;
+          statusDiv!.textContent = "تم إرسال الرسالة بنجاح!";
           statusDiv!.className = "status-message success";
-            (form as any).reset();
+          (form as any).reset();
 
           // Clear any previous error states
           inputs.forEach((input) => {
@@ -258,19 +258,19 @@ import "../../styles/contact.css";
             input.removeAttribute("aria-invalid");
           });
         } else {
-          statusDiv!.textContent = result.error;
+          statusDiv!.textContent = "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.";
           statusDiv!.className = "status-message error";
         }
       } catch (error) {
         console.error("Error sending email:", error);
         statusDiv!.textContent =
-          "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.";
+            "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.";
         statusDiv!.className = "status-message error";
       } finally {
         // Reset button state
         submitButton.disabled = false;
         submitButton.innerHTML =
-          'إرسال الرسالة <svg class="astro-icon" aria-hidden="true" width="16" height="16"><use href="#tabler:arrow-up-right"></use></svg>';
+            'إرسال الرسالة <svg class="astro-icon" aria-hidden="true" width="16" height="16"><use href="#tabler:arrow-up-right"></use></svg>';
       }
     });
   });

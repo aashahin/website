@@ -9,11 +9,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/node": "^9.2.2",
-    "@types/nodemailer": "^6.4.17",
+    "@astrojs/cloudflare": "^12.5.4",
     "astro": "^5.9.1",
-    "astro-icon": "^1.1.5",
-    "nodemailer": "^7.0.3"
+    "astro-icon": "^1.1.5"
   },
   "devDependencies": {
     "@iconify-json/tabler": "^1.2.19"
