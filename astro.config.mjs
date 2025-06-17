@@ -23,7 +23,20 @@ export default defineConfig({
     },
     experimental: {
         responsiveImages: true,
-        csp: true,
+        csp: {
+            directives: [
+                "default-src 'self'",
+                "font-src 'self' fonts.gstatic.com"
+            ],
+            styleDirective: {
+                resources: [
+                    "https://fonts.googleapis.com",
+                ]
+            },
+            scriptDirective: {
+                strictDynamic: true
+            }
+        },
         headingIdCompat: true,
         clientPrerender: true,
     },
