@@ -10,5 +10,11 @@
   "observability": {
     "enabled": true
   },
+  "routes": [
+    {
+      "pattern": "abdelrahman.co",
+      "custom_domain": true
+    }
+  ],
   "upload_source_maps": true
 }

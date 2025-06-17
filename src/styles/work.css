@@ -63,6 +63,25 @@
     color: var(--blue-700);
 }
 
+.project-status.on-hold {
+    background-color: var(--amber-100);
+    color: var(--amber-700);
+}
+
+.project-status.archived {
+    background-color: var(--neutral-100);
+    color: var(--neutral-600);
+}
+
+.featured-badge {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    background-color: var(--purple-100);
+    color: var(--purple-700);
+}
+
 .project-icon {
     color: var(--neutral-400);
     transition: color 0.2s ease;

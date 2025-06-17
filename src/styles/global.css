@@ -1,12 +1,16 @@
+:root {
+    --font-sans: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Tahoma', '-apple-system', 'system-ui', sans-serif;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'IBM Plex Sans Arabic', "system-ui", "-apple-system", sans-serif;
+    font-family: var(--font-sans);
 }
 
 body {
-    font-family: 'IBM Plex Sans Arabic', "system-ui", "-apple-system", sans-serif;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -36,6 +40,10 @@ html {
     --emerald-700: #047857;
     --blue-100: #dbeafe;
     --blue-700: #1d4ed8;
+    --amber-100: #fffbeb;
+    --amber-700: #ca8a04;
+    --purple-100: #f3e8ff;
+    --purple-700: #7c3aed;
 }
 
 /* Page Container */
