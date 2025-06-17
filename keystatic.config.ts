@@ -2,10 +2,8 @@ import {config, fields, collection} from '@keystatic/core';
 
 export default config({
     storage: {
-        kind: 'cloud',
-    },
-    cloud: {
-        project: "shahin/website"
+        kind: 'github',
+        repo: "aashahin/website"
     },
     collections: {
         posts: collection({
