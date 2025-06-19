@@ -1,4 +1,6 @@
 ---
+export const prerender = true;
+
 import { getCollection, getEntry } from "astro:content";
 import Layout from "../../components/layout/Layout.astro";
 import { transformPostToArticle } from "../../utils/articles";
@@ -11,7 +13,7 @@ import "../../styles/pages/articles/related-articles.css";
 import "../../styles/shared/share-buttons.css";
 import "../../styles/shared/copy-code.css";
 import "../../styles/shared/markdown-styles.css";
-import "../../styles/shared/article-dark-mode.css"; // <-- Import the new dark mode styles
+import "../../styles/shared/article-dark-mode.css";
 
 // We will fetch the full data for each page individually below.
 export async function getStaticPaths() {
