@@ -5,7 +5,7 @@ import '@fontsource/ibm-plex-sans-arabic/500.css';
 import '@fontsource/ibm-plex-sans-arabic/600.css';
 import '@fontsource/ibm-plex-sans-arabic/700.css';
 
-import "../../styles/global.css";
+import globalStyles from "../../styles/global.css?raw";
 
 const {title} = Astro.props;
 ---
@@ -34,6 +34,8 @@ const {title} = Astro.props;
     <meta property="og:updated_time" content={new Date().toISOString()}/>
 
     <link rel="sitemap" href="/sitemap-index.xml"/>
+
+    <style is:inline set:html={globalStyles}/>
 </head>
 <body>
 <slot/>
