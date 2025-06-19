@@ -1,5 +1,5 @@
 ---
-export const prerender = false;
+export const prerender = true;
 
 import { getCollection, getEntry } from "astro:content";
 import Layout from "../../components/layout/Layout.astro";
@@ -14,6 +14,19 @@ import "../../styles/shared/share-buttons.css";
 import "../../styles/shared/copy-code.css";
 import "../../styles/shared/markdown-styles.css";
 import "../../styles/shared/article-dark-mode.css";
+
+// We will fetch the full data for each page individually below.
+export async function getStaticPaths() {
+  const allPosts: Post[] = await getCollection("posts");
+
+  const publishedPosts = allPosts.filter(
+    (post) => post && post.data && post.data.status === "published"
+  );
+
+  return publishedPosts.map((post) => ({
+    params: { slug: post.slug }
+  }));
+}
 
 // Get the unique slug for this page from Astro.params.
 const { slug } = Astro.params;

@@ -1,205 +1,208 @@
 ---
-import {Icon} from "astro-icon/components";
-import {getCollection} from 'astro:content';
-import type {Project, ProjectStatus, StatusDisplayMap, StatusClassMap} from '../../types/projects';
+import { Icon } from "astro-icon/components";
+import { getCollection } from "astro:content";
+import type { Project, ProjectStatus, StatusDisplayMap, StatusClassMap } from "../../types/projects";
 import "../../styles/pages/home/work.css";
 
-const projects: Project[] = await getCollection('projects');
+const projects: Project[] = await getCollection("projects");
 const MAX_TECH_DISPLAY = 5; // Limit initial tech tags shown
 
 // Helper function to format date to year
 const getYear = (date: Date): string => {
-    return new Date(date).getFullYear().toString();
+  return new Date(date).getFullYear().toString();
 };
 
 // Helper function to format status for display
 const formatStatus = (status: ProjectStatus): string => {
-    const statusMap: StatusDisplayMap = {
-        'in-development': 'قيد التطوير',
-        'completed': 'مكتمل',
-        'on-hold': 'متوقف مؤقتاً',
-        'archived': 'مؤرشف'
-    };
-    return statusMap[status];
+  const statusMap: StatusDisplayMap = {
+    "in-development": "قيد التطوير",
+    "completed": "مكتمل",
+    "on-hold": "متوقف مؤقتاً",
+    "archived": "مؤرشف"
+  };
+  return statusMap[status];
 };
 
 // Helper function to get CSS class for status
 const getStatusClass = (status: ProjectStatus): string => {
-    const classMap: StatusClassMap = {
-        'completed': 'completed',
-        'in-development': 'in-development',
-        'on-hold': 'on-hold',
-        'archived': 'archived'
-    };
-    return classMap[status];
+  const classMap: StatusClassMap = {
+    "completed": "completed",
+    "in-development": "in-development",
+    "on-hold": "on-hold",
+    "archived": "archived"
+  };
+  return classMap[status];
 };
 
 // Sort projects by start date (most recent first) or featured status
 const sortedProjects: Project[] = projects.sort((a, b) => {
-    // Featured projects first
-    if (a.data.featured && !b.data.featured) return -1;
-    if (!a.data.featured && b.data.featured) return 1;
+  // Featured projects first
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
 
-    // Then by start date (most recent first)
-    return new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime();
+  // Then by start date (most recent first)
+  return new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime();
 });
 
 // Helper function to get limited technologies
 const getLimitedTech = (technologies: string[] = []) => {
-    if (technologies.length <= MAX_TECH_DISPLAY) {
-        return {visible: technologies, hidden: []};
-    }
-    return {
-        visible: technologies.slice(0, MAX_TECH_DISPLAY),
-        hidden: technologies.slice(MAX_TECH_DISPLAY)
-    };
+  if (technologies.length <= MAX_TECH_DISPLAY) {
+    return { visible: technologies, hidden: [] };
+  }
+  return {
+    visible: technologies.slice(0, MAX_TECH_DISPLAY),
+    hidden: technologies.slice(MAX_TECH_DISPLAY)
+  };
 };
 ---
 
 {/* Work */}
 <section id="work" class="work-section">
-    <div class="section-container">
-        <div class="section-grid">
-            <div class="section-header">
-                <div class="section-header-sticky">
-                    <h2 class="section-title">مشاريع مميزة</h2>
-                    <div class="section-divider"></div>
-                    <p class="section-description">
-                        مجموعة من المشاريع التي عملت عليها مؤخراً، تظهر خبرتي في التقنيات
-                        المختلفة.
-                    </p>
-                    <a
-                            href="https://github.com/aashahin"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="github-cta-link"
-                            aria-label="شاهد كل المشاريع المفتوحة المصدر على GitHub"
-                    >
-                        <span>شاهد المشاريع مفتوحة المصدر على GitHub</span>
-                        <Icon name="tabler:brand-github" size={18}/>
-                    </a>
-                </div>
-            </div>
+  <div class="section-container">
+    <div class="section-grid">
+      <div class="section-header">
+        <div class="section-header-sticky">
+          <h2 class="section-title">مشاريع مميزة</h2>
+          <div class="section-divider"></div>
+          <p class="section-description">
+            مجموعة من المشاريع التي عملت عليها مؤخراً، تظهر خبرتي في التقنيات
+            المختلفة.
+          </p>
+          <a
+            href="https://github.com/aashahin"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="github-cta-link"
+            aria-label="شاهد كل المشاريع المفتوحة المصدر على GitHub"
+          >
+            <span>شاهد المشاريع مفتوحة المصدر على GitHub</span>
+            <Icon name="tabler:brand-github" size={18} />
+          </a>
+        </div>
+      </div>
 
-            <div class="projects-list">
-                {sortedProjects.map((project: Project, index: number) => {
-                    const techData = getLimitedTech(project.data.technologies);
-                    return (
-                            <article class="project-card" data-project-id={index}>
-                                <div class="project-content">
-                                    <header class="project-header">
-                                        <div class="project-meta">
-                                            <time class="project-year" datetime={project.data.startDate.toISOString()}>
-                                                {getYear(project.data.startDate)}
-                                            </time>
-                                            <span class={`project-status ${getStatusClass(project.data.status)}`}>
+      <div class="projects-list">
+        {sortedProjects.map((project: Project, index: number) => {
+          const techData = getLimitedTech(project.data.technologies);
+          return (
+            <article class="project-card" data-project-id={index}>
+              <div class="project-content">
+                <header class="project-header">
+                  <div class="project-meta">
+                    <time class="project-year" datetime={project.data.startDate.toISOString()}>
+                      {getYear(project.data.startDate)}
+                    </time>
+                    <span class={`project-status ${getStatusClass(project.data.status)}`}>
                                             {formatStatus(project.data.status)}
                                         </span>
-                                            {project.data.featured && (
-                                                    <span class="featured-badge">مميز</span>
-                                            )}
-                                        </div>
-                                        <div class="project-links">
-                                            {project.data.links?.live && (
-                                                    <a
-                                                            href={project.data.links.live}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            class="project-link-icon"
-                                                            aria-label={`فتح مشروع ${project.data.title} في نافذة جديدة`}
-                                                    >
-                                                        <Icon name="tabler:external-link" size={16}
-                                                              class="project-icon"/>
-                                                    </a>
-                                            )}
-                                            {project.data.links?.github && (
-                                                    <a
-                                                            href={project.data.links.github}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            class="project-link-icon"
-                                                            aria-label={`عرض كود مشروع ${project.data.title} على GitHub`}
-                                                    >
-                                                        <Icon name="tabler:brand-github" size={16}
-                                                              class="project-icon"/>
-                                                    </a>
-                                            )}
-                                            {project.data.links?.documentation && (
-                                                    <a
-                                                            href={project.data.links.documentation}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            class="project-link-icon"
-                                                            aria-label={`عرض وثائق مشروع ${project.data.title}`}
-                                                    >
-                                                        <Icon name="tabler:book" size={16} class="project-icon"/>
-                                                    </a>
-                                            )}
-                                        </div>
-                                    </header>
+                    {project.data.featured && (
+                      <span class="featured-badge">مميز</span>
+                    )}
+                  </div>
+                  <div class="project-links">
+                    {project.data.links?.live && (
+                      <a
+                        href={project.data.links.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="project-link-icon"
+                        aria-label={`فتح مشروع ${project.data.title} في نافذة جديدة`}
+                      >
+                        <Icon name="tabler:external-link" size={16}
+                              class="project-icon" />
+                      </a>
+                    )}
+                    {project.data.links?.github && (
+                      <a
+                        href={project.data.links.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="project-link-icon"
+                        aria-label={`عرض كود مشروع ${project.data.title} على GitHub`}
+                      >
+                        <Icon name="tabler:brand-github" size={16}
+                              class="project-icon" />
+                      </a>
+                    )}
+                    {project.data.links?.documentation && (
+                      <a
+                        href={project.data.links.documentation}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="project-link-icon"
+                        aria-label={`عرض وثائق مشروع ${project.data.title}`}
+                      >
+                        <Icon name="tabler:book" size={16} class="project-icon" />
+                      </a>
+                    )}
+                  </div>
+                </header>
 
-                                    {project.data.links?.live ? (
-                                            <a
-                                                    href={project.data.links.live}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    class="project-title-link"
-                                            >
-                                                <h3 class="project-title">{project.data.title}</h3>
-                                            </a>
-                                    ) : (
-                                            <h3 class="project-title">{project.data.title}</h3>
-                                    )}
+                {project.data.links?.live ? (
+                  <a
+                    href={project.data.links.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="project-title-link"
+                  >
+                    <h3 class="project-title">{project.data.title}</h3>
+                  </a>
+                ) : (
+                  <h3 class="project-title">{project.data.title}</h3>
+                )}
 
-                                    <p class="project-description">{project.data.shortDescription}</p>
+                <p class="project-description">{project.data.shortDescription}</p>
 
-                                    {techData.visible.length > 0 && (
-                                            <div class="project-tech">
-                                                {techData.visible.map((tech: string) => (
-                                                        <span class="tech-tag">{tech}</span>
-                                                ))}
-                                                {techData.hidden.length > 0 && (
-                                                        <button
-                                                                class="tech-expand-btn"
-                                                                data-hidden-count={techData.hidden.length}
-                                                                aria-label={`عرض ${techData.hidden.length} تقنيات إضافية`}
-                                                        >
-                                                            +{techData.hidden.length}
-                                                        </button>
-                                                )}
-                                                <div class="tech-hidden" style="display: none;">
-                                                    {techData.hidden.map((tech: string) => (
-                                                            <span class="tech-tag">{tech}</span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                    )}
-                                </div>
-                            </article>
-                    );
-                })}
-            </div>
-        </div>
+                {techData.visible.length > 0 && (
+                  <div class="project-tech">
+                    {techData.visible.map((tech: string) => (
+                      <span class="tech-tag">{tech}</span>
+                    ))}
+                    {techData.hidden.length > 0 && (
+                      <button
+                        class="tech-expand-btn"
+                        data-hidden-count={techData.hidden.length}
+                        aria-label={`عرض ${techData.hidden.length} تقنيات إضافية`}
+                      >
+                        +{techData.hidden.length}
+                      </button>
+                    )}
+                    <div class="tech-hidden" style="display: none;">
+                      {techData.hidden.map((tech: string) => (
+                        <span class="tech-tag">{tech}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </div>
     </div>
+  </div>
 </section>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const expandButtons = document.querySelectorAll('.tech-expand-btn');
+  document.addEventListener("DOMContentLoaded", () => {
+    const expandButtons = document.querySelectorAll(".tech-expand-btn");
 
-        expandButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const projectTech = button.closest('.project-tech');
-                const hiddenTags = projectTech?.querySelector('.tech-hidden');
+    expandButtons.forEach(button => {
+      document.addEventListener("astro:page-load", () => {
 
-                if (hiddenTags) {
-                    const isHidden = (hiddenTags as HTMLElement).style.display === 'none';
-                    (hiddenTags as HTMLElement).style.display = isHidden ? 'contents' : 'none';
-                    button.textContent = isHidden ? 'أقل' : `+${(button as HTMLElement).dataset.hiddenCount}`;
-                    button.setAttribute('aria-expanded', isHidden.toString());
-                }
-            });
+        button.addEventListener("click", (e) => {
+          e.preventDefault();
+          const projectTech = button.closest(".project-tech");
+          const hiddenTags = projectTech?.querySelector(".tech-hidden");
+
+          if (hiddenTags) {
+            const isHidden = (hiddenTags as HTMLElement).style.display === "none";
+            (hiddenTags as HTMLElement).style.display = isHidden ? "contents" : "none";
+            button.textContent = isHidden ? "أقل" : `+${(button as HTMLElement).dataset.hiddenCount}`;
+            button.setAttribute("aria-expanded", isHidden.toString());
+          }
         });
+      });
     });
+  });
 </script>
