@@ -20,11 +20,11 @@ export function searchArticles(articles: Article[], query: string): Article[] {
 // Get related articles based on tags
 export function getRelatedArticles(currentArticle: Article, allArticles: Article[], limit = 3): Article[] {
     const relatedArticles = allArticles
-        // .filter(article =>
-        //     article.id !== currentArticle.id &&
-        //     article.status === 'published' &&
-        //     article.tags.some(tag => currentArticle.tags.includes(tag))
-        // )
+        .filter(article =>
+            article.id !== currentArticle.id &&
+            article.status === 'published' &&
+            article.tags.some(tag => currentArticle.tags.includes(tag))
+        )
         .sort((a, b) => {
             // Sort by number of matching tags
             const aMatches = a.tags.filter(tag => currentArticle.tags.includes(tag)).length;
@@ -32,11 +32,7 @@ export function getRelatedArticles(currentArticle: Article, allArticles: Article
             return bMatches - aMatches;
         });
 
-    // repeat the current article if not enough related articles found
-    const limitedRelatedArticles = relatedArticles.slice(0, limit);
-    return limitedRelatedArticles.length < limit
-        ? [...limitedRelatedArticles, ...Array(limit - limitedRelatedArticles.length).fill(currentArticle)]
-        : limitedRelatedArticles;
+    return relatedArticles.slice(0, limit);
 }
 
 // Paginate articles
