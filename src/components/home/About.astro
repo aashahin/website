@@ -3,38 +3,65 @@ import "../../styles/about.css";
 
 const skillCategories = {
     "Frontend": [
-        "JavaScript", "TypeScript", "React", "Next.js",
-        "Tailwind", "Svelte", "Astro.js", "Qwik.js", "Remix.js"
+        "CSS", "JavaScript", "TypeScript", "React", "Next.js",
+        "Tailwind", "Svelte", "Astro.js", "Qwik.js", "Remix.js", "Solid.js",
     ],
     "Backend": [
         "Node.js", "Bun.js", "Nest.js", "Python", "GraphQL", "WebSockets",
-        "JWT/OAuth2", "REST APIs", "Microservices", "Serverless", "Prisma", "Drizzle", "RabbitMQ", "Kafka"
+        "JWT/OAuth2", "REST APIs", "Microservices", "Serverless", "PrismaORM", "DrizzleORM", "RabbitMQ", "Kafka"
     ],
     "Database": [
         "PostgreSQL", "MySQL", "Sqlite", "MongoDB", "Chroma", "MeiliSearch", "Redis", "Dragonfly"
     ],
     "Mobile": [
-        "Flutter", "React Native"
+        "Dart", "Flutter", "React Native"
     ],
     "DevOps": [
         "Docker", "Linux", "Nginx", "Caddy", "Github", "Gitlab", "CI/CD", "Jenkins",
-        "AWS", "GCP", "DO", "Vercel", "Netlify", "Railway", "Turso"
+        "AWS", "GCP", "DO", "Vercel", "Netlify", "Railway", "Aapanel", "Cpanel", "Coolify", "Turso"
     ],
     "AI/ML": [
-        "Hugging Face", "RAG Pipelines", "Langchain", "LlamaIndex", "OpenAI", "Vertex AI", "Vercel AI"
+        "Hugging Face", "RAG Pipelines", "Langchain", "LlamaIndex", "OpenAI", "Vertex AI", "Vercel AI", "Ollama"
     ]
 };
+
+const services = [
+    "تطوير تطبيقات الويب",
+    "تطوير تطبيقات الهواتف المحمولة",
+    "تصميم واجهات المستخدم",
+    "بناء APIs و المايكروسيرفس",
+    "حلول الذكاء الاصطناعي",
+    "استشارات تقنية",
+    "تحسين الأداء والأمان",
+    "تدريب وتوجيه الفرق التقنية"
+];
+
+// Limit services displayed initially
+const MAX_SERVICES_DISPLAY = 5;
+
+// Helper function to get limited services
+const getLimitedServices = () => {
+    if (services.length <= MAX_SERVICES_DISPLAY) {
+        return {visible: services, hidden: []};
+    }
+    return {
+        visible: services.slice(0, MAX_SERVICES_DISPLAY),
+        hidden: services.slice(MAX_SERVICES_DISPLAY)
+    };
+};
+
+const limitedServices = getLimitedServices();
 ---
 
 <section id="about" class="about-section">
     <div class="section-container">
         <div class="section-grid">
-            <div class="section-header">
+            <header class="section-header">
                 <div class="section-header-sticky">
                     <h2 class="section-title">نبذة عني</h2>
                     <div class="section-divider"></div>
                 </div>
-            </div>
+            </header>
 
             <div class="about-content">
                 <div class="about-text">
@@ -53,14 +80,17 @@ const skillCategories = {
                         <h3 class="details-title">التقنيات</h3>
                         <div class="skills-categories">
                             {Object.entries(skillCategories).map(([category, skills]) => (
-                                    <div class="skill-category">
-                                        <h4 class="category-title">{category}</h4>
+                                    <details class="skill-category" data-category={category.toLowerCase()}>
+                                        <summary class="category-summary">
+                                            <h4 class="category-title">{category}</h4>
+                                            <span class="category-count">({skills.length})</span>
+                                        </summary>
                                         <div class="skills-list">
                                             {skills.map((skill) => (
                                                     <span class="skill-item">{skill}</span>
                                             ))}
                                         </div>
-                                    </div>
+                                    </details>
                             ))}
                         </div>
                     </div>
@@ -68,17 +98,25 @@ const skillCategories = {
                     <div class="about-services">
                         <h3 class="details-title">الخدمات</h3>
                         <div class="services-list">
-                            {[
-                                "تطوير تطبيقات الويب",
-                                "تطوير تطبيقات الهواتف المحمولة",
-                                "تصميم واجهات المستخدم",
-                                "بناء APIs و المايكروسيرفس",
-                                "حلول الذكاء الاصطناعي",
-                                "استشارات تقنية",
-                                "تحسين الأداء والأمان",
-                            ].map((service) => (
+                            {limitedServices.visible.map((service) => (
                                     <div class="service-item">{service}</div>
                             ))}
+                            {limitedServices.hidden.length > 0 && (
+                                    <>
+                                        <button
+                                                class="services-expand-btn"
+                                                data-hidden-count={limitedServices.hidden.length}
+                                                aria-label={`عرض ${limitedServices.hidden.length} خدمات إضافية`}
+                                        >
+                                            عرض المزيد ({limitedServices.hidden.length})
+                                        </button>
+                                        <div class="services-hidden" style="display: none;">
+                                            {limitedServices.hidden.map((service) => (
+                                                    <div class="service-item">{service}</div>
+                                            ))}
+                                        </div>
+                                    </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -86,3 +124,33 @@ const skillCategories = {
         </div>
     </div>
 </section>
+
+<script>
+    // Progressive enhancement for services expansion only
+    document.addEventListener('DOMContentLoaded', () => {
+        // Services expansion
+        const servicesExpandBtn: HTMLElement | null = document.querySelector('.services-expand-btn');
+        if (servicesExpandBtn) {
+            servicesExpandBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const servicesList = servicesExpandBtn.closest('.services-list');
+                const hiddenServices: HTMLElement | null | undefined = servicesList?.querySelector('.services-hidden');
+
+                if (hiddenServices) {
+                    const isHidden = hiddenServices.style.display === 'none';
+                    if (isHidden) {
+                        hiddenServices.style.display = 'flex';
+                        hiddenServices.style.flexDirection = 'column';
+                        hiddenServices.style.gap = '0.5rem';
+                    } else {
+                        hiddenServices.style.display = 'none';
+                    }
+                    servicesExpandBtn.textContent = isHidden
+                        ? 'عرض أقل'
+                        : `عرض المزيد (${servicesExpandBtn.dataset.hiddenCount})`;
+                    servicesExpandBtn.setAttribute('aria-expanded', isHidden.toString());
+                }
+            });
+        }
+    });
+</script>

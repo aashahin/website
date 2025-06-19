@@ -44,11 +44,6 @@ const sortedProjects: Project[] = projects.sort((a, b) => {
     return new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime();
 });
 
-// Helper function to check if project has external links
-const hasExternalLinks = (project: Project): boolean => {
-    return !!(project.data.links?.live || project.data.links?.github || project.data.links?.documentation);
-};
-
 // Helper function to get limited technologies
 const getLimitedTech = (technologies: string[] = []) => {
     if (technologies.length <= MAX_TECH_DISPLAY) {
@@ -67,12 +62,22 @@ const getLimitedTech = (technologies: string[] = []) => {
         <div class="section-grid">
             <div class="section-header">
                 <div class="section-header-sticky">
-                    <h2 class="section-title">أحدث المشاريع</h2>
+                    <h2 class="section-title">مشاريع مميزة</h2>
                     <div class="section-divider"></div>
                     <p class="section-description">
                         مجموعة من المشاريع التي عملت عليها مؤخراً، تظهر خبرتي في التقنيات
                         المختلفة.
                     </p>
+                    <a
+                            href="https://github.com/aashahin"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="github-cta-link"
+                            aria-label="شاهد كل المشاريع المفتوحة المصدر على GitHub"
+                    >
+                        <span>شاهد المشاريع مفتوحة المصدر على GitHub</span>
+                        <Icon name="tabler:brand-github" size={18}/>
+                    </a>
                 </div>
             </div>
 
@@ -94,17 +99,43 @@ const getLimitedTech = (technologies: string[] = []) => {
                                                     <span class="featured-badge">مميز</span>
                                             )}
                                         </div>
-                                        {hasExternalLinks(project) && project.data.links?.live && (
-                                                <a
-                                                        href={project.data.links.live}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        class="project-link-icon"
-                                                        aria-label={`فتح مشروع ${project.data.title} في نافذة جديدة`}
-                                                >
-                                                    <Icon name="tabler:external-link" size={16} class="project-icon"/>
-                                                </a>
-                                        )}
+                                        <div class="project-links">
+                                            {project.data.links?.live && (
+                                                    <a
+                                                            href={project.data.links.live}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            class="project-link-icon"
+                                                            aria-label={`فتح مشروع ${project.data.title} في نافذة جديدة`}
+                                                    >
+                                                        <Icon name="tabler:external-link" size={16}
+                                                              class="project-icon"/>
+                                                    </a>
+                                            )}
+                                            {project.data.links?.github && (
+                                                    <a
+                                                            href={project.data.links.github}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            class="project-link-icon"
+                                                            aria-label={`عرض كود مشروع ${project.data.title} على GitHub`}
+                                                    >
+                                                        <Icon name="tabler:brand-github" size={16}
+                                                              class="project-icon"/>
+                                                    </a>
+                                            )}
+                                            {project.data.links?.documentation && (
+                                                    <a
+                                                            href={project.data.links.documentation}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            class="project-link-icon"
+                                                            aria-label={`عرض وثائق مشروع ${project.data.title}`}
+                                                    >
+                                                        <Icon name="tabler:book" size={16} class="project-icon"/>
+                                                    </a>
+                                            )}
+                                        </div>
                                     </header>
 
                                     {project.data.links?.live ? (

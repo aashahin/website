@@ -53,99 +53,132 @@ import "../../styles/nav.css";
 </nav>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Type assertions tell TypeScript the specific kind of element we expect
-        const mobileMenuButton = document.querySelector<HTMLButtonElement>('.mobile-menu-button');
-        const mobileNav = document.querySelector<HTMLElement>('.mobile-nav');
+    // Use an IIFE to avoid polluting global scope and enable better minification
+    (() => {
+        // Cache DOM elements early
+        const mobileMenuButton = document.querySelector('.mobile-menu-button') as HTMLButtonElement;
+        const mobileNav = document.querySelector('.mobile-nav') as HTMLElement;
         const body = document.body;
+        const nav = document.querySelector('.navbar') as HTMLElement;
 
-        // --- Mobile Menu Toggle ---
-        if (mobileMenuButton && mobileNav) {
-            mobileMenuButton.addEventListener('click', () => {
-                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-                mobileMenuButton.setAttribute('aria-expanded', String(!isExpanded));
-                mobileMenuButton.setAttribute('aria-label', isExpanded ? 'فتح القائمة' : 'إغلاق القائمة');
-                mobileNav.classList.toggle('active');
-                mobileMenuButton.classList.toggle('active');
-                body.classList.toggle('mobile-menu-open');
-            });
+        // Early return if critical elements don't exist
+        if (!mobileMenuButton || !mobileNav || !nav) return;
 
-            const mobileLinks = document.querySelectorAll<HTMLAnchorElement>('.mobile-link');
-            const closeMobileMenu = () => {
-                mobileNav.classList.remove('active');
-                mobileMenuButton.classList.remove('active');
-                mobileMenuButton.setAttribute('aria-expanded', 'false');
-                mobileMenuButton.setAttribute('aria-label', 'فتح القائمة');
-                body.classList.remove('mobile-menu-open');
-            };
+        // Cache computed values
+        const navHeight = nav.offsetHeight;
+        let ticking = false;
 
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', closeMobileMenu);
-            });
-
-            document.addEventListener('click', (e: MouseEvent) => {
-                // Assert that e.target is a Node for the .contains() method
-                const target = e.target as Node;
-                if (!mobileMenuButton.contains(target) && !mobileNav.contains(target)) {
-                    closeMobileMenu();
-                }
-            });
-        }
-
-        // --- Active Link Highlighting on Scroll ---
-        const sections = document.querySelectorAll<HTMLElement>('section[id]');
-        const navLinks = document.querySelectorAll<HTMLAnchorElement>('.navbar-link, .mobile-link');
-        const nav = document.querySelector<HTMLElement>('.navbar');
-        const navHeight = nav ? nav.offsetHeight : 70;
-
-        const updateActiveLinkOnScroll = () => {
-            let currentSectionId: string = '';
-
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - navHeight;
-                if (window.scrollY >= sectionTop - 1) {
-                    // Use the non-null assertion operator (!) because our selector 'section[id]' guarantees it exists.
-                    currentSectionId = section.getAttribute('id')!;
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `/#${currentSectionId}`) {
-                    link.classList.add('active');
-                }
-            });
+        // --- Mobile Menu Toggle (optimized) ---
+        const closeMobileMenu = () => {
+            mobileNav.classList.remove('active');
+            mobileMenuButton.classList.remove('active');
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+            mobileMenuButton.setAttribute('aria-label', 'فتح القائمة');
+            body.classList.remove('mobile-menu-open');
         };
 
-        window.addEventListener('scroll', updateActiveLinkOnScroll);
-        updateActiveLinkOnScroll();
+        const toggleMobileMenu = () => {
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            const newState = !isExpanded;
 
+            mobileMenuButton.setAttribute('aria-expanded', String(newState));
+            mobileMenuButton.setAttribute('aria-label', newState ? 'إغلاق القائمة' : 'فتح القائمة');
+            mobileNav.classList.toggle('active', newState);
+            mobileMenuButton.classList.toggle('active', newState);
+            body.classList.toggle('mobile-menu-open', newState);
+        };
 
-        // --- Smooth scroll behavior (using arrow function to avoid 'this') ---
-        document.querySelectorAll<HTMLAnchorElement>('a[href^="/#"]').forEach(anchor => {
-            anchor.addEventListener('click', (e: MouseEvent) => {
-                e.preventDefault();
+        // Use event delegation for mobile links instead of individual listeners
+        mobileNav.addEventListener('click', (e) => {
+            if ((e.target as Element).classList.contains('mobile-link')) {
+                closeMobileMenu();
+            }
+        });
 
-                // Get href from the element that the listener is attached to (e.currentTarget)
-                const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
-                if (!href) return;
+        // Optimized outside click handler
+        const handleOutsideClick = (e: Event) => {
+            const target = e.target as Node;
+            if (!mobileMenuButton.contains(target) && !mobileNav.contains(target)) {
+                closeMobileMenu();
+            }
+        };
 
-                const targetId = href.substring(2);
-                const targetElement = document.getElementById(targetId);
+        mobileMenuButton.addEventListener('click', toggleMobileMenu);
+        document.addEventListener('click', handleOutsideClick);
 
-                if (targetElement) {
-                    // targetElement is HTMLElement, so it has offsetTop
-                    const elementPosition = targetElement.offsetTop;
-                    const offsetPosition = elementPosition - navHeight;
+        // --- Optimized Active Link Highlighting ---
+        const sections = Array.from(document.querySelectorAll('section[id]')) as HTMLElement[];
+        const navLinks = Array.from(document.querySelectorAll('.navbar-link, .mobile-link')) as HTMLAnchorElement[];
 
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
+        // Cache section data for better performance
+        const sectionData = sections.map(section => ({
+            id: section.id,
+            offsetTop: section.offsetTop
+        }));
+
+        // Throttled scroll handler using requestAnimationFrame
+        const updateActiveLinkOnScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    let currentSectionId = '';
+
+                    // Use cached section data
+                    for (const section of sectionData) {
+                        if (scrollY >= section.offsetTop - navHeight - 1) {
+                            currentSectionId = section.id;
+                        }
+                    }
+
+                    // Batch DOM updates
+                    navLinks.forEach(link => {
+                        const isActive = link.getAttribute('href') === `/#${currentSectionId}`;
+                        link.classList.toggle('active', isActive);
                     });
 
-                    history.pushState(null, '', href);
-                }
-            });
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+
+        // --- Optimized Smooth Scroll ---
+        const handleSmoothScroll = (e: Event) => {
+            const target = e.target as HTMLAnchorElement;
+            const href = target.getAttribute('href');
+
+            if (!href?.startsWith('/#')) return;
+
+            e.preventDefault();
+
+            const targetId = href.substring(2);
+            const targetElement = document.getElementById(targetId);
+
+            if (targetElement) {
+                const offsetPosition = targetElement.offsetTop - navHeight;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Use replaceState instead of pushState to avoid cluttering history
+                history.replaceState(null, '', href);
+            }
+        };
+
+        // Use event delegation for anchor links
+        document.addEventListener('click', (e) => {
+            const target = e.target as Element;
+            if (target.tagName === 'A' && (target as HTMLAnchorElement).getAttribute('href')?.startsWith('/#')) {
+                handleSmoothScroll(e);
+            }
         });
-    });
+
+        // Use passive listener for better scroll performance
+        window.addEventListener('scroll', updateActiveLinkOnScroll, { passive: true });
+
+        // Initial call
+        updateActiveLinkOnScroll();
+    })();
 </script>
