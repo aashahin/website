@@ -1,11 +1,21 @@
 ---
-import '@fontsource/ibm-plex-sans-arabic/300.css';
-import '@fontsource/ibm-plex-sans-arabic/400.css';
-import '@fontsource/ibm-plex-sans-arabic/500.css';
-import '@fontsource/ibm-plex-sans-arabic/600.css';
-import '@fontsource/ibm-plex-sans-arabic/700.css';
-
+// Import fonts and global styles as raw strings
+import font300 from '@fontsource/ibm-plex-sans-arabic/300.css?raw';
+import font400 from '@fontsource/ibm-plex-sans-arabic/400.css?raw';
+import font500 from '@fontsource/ibm-plex-sans-arabic/500.css?raw';
+import font600 from '@fontsource/ibm-plex-sans-arabic/600.css?raw';
+import font700 from '@fontsource/ibm-plex-sans-arabic/700.css?raw';
 import globalStyles from "../../styles/global.css?raw";
+
+// Combine all the styles into one string
+const allStyles = `
+    ${font300}
+    ${font400}
+    ${font500}
+    ${font600}
+    ${font700}
+    ${globalStyles}
+`;
 
 const {title} = Astro.props;
 ---
@@ -35,7 +45,8 @@ const {title} = Astro.props;
 
     <link rel="sitemap" href="/sitemap-index.xml"/>
 
-    <style is:inline set:html={globalStyles}/>
+    {/* Inject the combined CSS string directly into the HTML */}
+    <style is:inline set:html={allStyles}/>
 </head>
 <body>
 <slot/>
