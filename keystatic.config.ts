@@ -19,10 +19,12 @@ export default config({
             columns: ["title", "publishedDate", "updatedDate", "status"],
             schema: {
                 title: fields.slug({name: {label: 'Title'}}),
-                description: fields.text({label: 'Description'}),
                 excerpt: fields.text({
                     label: 'Excerpt',
-                    description: 'Short summary for post previews'
+                    description: 'Short summary for post previews',
+                    validation: {
+                        isRequired: true
+                    }
                 }),
                 status: fields.select({
                     label: 'Status',
@@ -42,7 +44,7 @@ export default config({
                     options: {
                         image: {
                             directory: 'src/assets/images/posts',
-                            publicPath: '@assets/images/posts/'
+                            publicPath: '@assets/images/posts/',
                         },
                     },
                 }),

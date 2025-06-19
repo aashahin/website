@@ -1,4 +1,3 @@
-// Base types for the content collection
 export type ProjectLinks = {
     live?: string;
     github?: string;
@@ -41,11 +40,6 @@ export type Project = {
     render: () => Promise<any>;
 }
 
-// Utility types for component props
-export type ProjectCardProps = {
-    project: Project;
-}
-
 // Status mapping types
 export type StatusDisplayMap = {
     [K in ProjectStatus]: string;
@@ -54,6 +48,3 @@ export type StatusDisplayMap = {
 export type StatusClassMap = {
     [K in ProjectStatus]: string;
 };
-
-// Helper type for sorted projects
-export type SortedProject = Project;

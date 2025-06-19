@@ -1,0 +1,56 @@
+.share-container {
+    margin: 3rem 0;
+    padding-top: 2rem;
+    text-align: center;
+    border-top: 1px solid var(--neutral-200);
+}
+
+.share-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--neutral-800);
+    margin: 0 0 1.5rem 0;
+}
+
+.share-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.share-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.2rem;
+    border-radius: 9999px; /* Pill shape */
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.share-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Platform-specific colors */
+.share-button.whatsapp  { background-color: #28a745; }
+.share-button.facebook  { background-color: #1877F2; }
+.share-button.telegram  { background-color: #2AABEE; }
+.share-button.x-twitter { background-color: #000000; }
+.share-button.copy-link {
+    background-color: var(--neutral-700);
+    color: var(--neutral-100);
+}
+
+.share-button.copy-link.copied {
+    background-color: #28a745; /* Success Green */
+    cursor: default;
+    transform: translateY(0);
+}

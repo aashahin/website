@@ -1,54 +1,51 @@
 ---
-// Import fonts and global styles as raw strings
-import font300 from '@fontsource/ibm-plex-sans-arabic/300.css?raw';
-import font400 from '@fontsource/ibm-plex-sans-arabic/400.css?raw';
-import font500 from '@fontsource/ibm-plex-sans-arabic/500.css?raw';
-import font600 from '@fontsource/ibm-plex-sans-arabic/600.css?raw';
-import font700 from '@fontsource/ibm-plex-sans-arabic/700.css?raw';
-import globalStyles from "../../styles/global.css?raw";
+import Nav from "./Nav.astro";
+import Footer from "../home/Footer.astro";
 
-// Combine all the styles into one string
-const allStyles = `
-    ${font300}
-    ${font400}
-    ${font500}
-    ${font600}
-    ${font700}
-    ${globalStyles}
-`;
+import "@fontsource/ibm-plex-sans-arabic/300.css";
+import "@fontsource/ibm-plex-sans-arabic/400.css";
+import "@fontsource/ibm-plex-sans-arabic/500.css";
+import "@fontsource/ibm-plex-sans-arabic/600.css";
 
-const {title} = Astro.props;
+import globalStyles from "../../styles/pages/home/global.css?raw";
+
+const { title, description, keywords, featuredImage, isFixed = true } = Astro.props;
+const metaDescription = description || "مهندس برمجيات بخبرة 8+ سنوات في تطوير التطبيقات الكاملة";
+const metaKeywords = keywords || "مهندس برمجيات, تطوير الويب, React, Node.js, MongoDB, PostgreSQL, Backend, Frontend, Full Stack, flutter, dart, python, javascript, js, typescript, wordpress, devops, security, Next.js, nextjs, astrojs, remixjs, flask api, api, rest api, nestjs, bunjs, elysiajs";
 ---
 
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="utf-8"/>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="generator" content={Astro.generator}/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>{title}</title>
-    <meta name="description" content="مهندس برمجيات بخبرة 8+ سنوات في تطوير التطبيقات الكاملة"/>
-    <meta name="keywords"
-          content="مهندس برمجيات, تطوير الويب, React, Node.js, MongoDB, PostgreSQL, Backend, Frontend, Full Stack, flutter, dart, python, javascript, js, typescript, wordpress, devops, security, Next.js, nextttttjs, astrojs, remixjs, flask api, api, rest api, nestjs, bunjs, elysiajs"/>
-    <meta name="author" content="عبدالرحمن شاهين"/>
-    <meta name="robots" content="index, follow"/>
-    <meta name="googlebot" content="index, follow"/>
-    <!-- OG -->
-    <meta property="og:title" content={title}/>
-    <meta property="og:description" content="مهندس برمجيات بخبرة 8+ سنوات في تطوير التطبيقات الكاملة"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:url" content="https://abdelrahman.co"/>
-    <meta property="og:site_name" content="عبدالرحمن شاهين"/>
-    <meta property="og:locale" content="ar_AR"/>
-    <meta property="og:updated_time" content={new Date().toISOString()}/>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content={Astro.generator} />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={metaDescription} />
+  <meta name="keywords" content={metaKeywords} />
+  <meta name="author" content="عبدالرحمن شاهين" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow" />
+  <!-- OG -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content="مهندس برمجيات بخبرة 8+ سنوات في تطوير التطبيقات الكاملة" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://abdelrahman.co" />
+  <meta property="og:site_name" content="عبدالرحمن شاهين" />
+  <meta property="og:locale" content="ar_AR" />
+  <meta property="og:updated_time" content={new Date().toISOString()} />
+  <meta property="og:image" content={featuredImage || "https://abdelrahman.co/og-image.png"} />
 
-    <link rel="sitemap" href="/sitemap-index.xml"/>
+  <link rel="sitemap" href="/sitemap-index.xml" />
 
-    {/* Inject the combined CSS string directly into the HTML */}
-    <style is:inline set:html={allStyles}/>
+  <style is:inline set:html={globalStyles} />
 </head>
 <body>
-<slot/>
+<main class="page-container">
+  <Nav isFixed={isFixed} />
+  <slot />
+  <Footer />
+</main>
 </body>
 </html>

@@ -1,0 +1,184 @@
+/* src/styles/shared/article-dark-mode.css */
+
+/* This class will be toggled on the .article-container element */
+.article-container.dark-mode {
+    /* No background change here, we'll apply it to the page for a full-bleed effect */
+}
+
+/* We apply the dark background to the whole page for a better experience */
+.article-page.dark-reader-active {
+    background-color: #1a1a1a; /* A dark, but not pure black background */
+    transition: background-color 0.3s ease;
+}
+
+/* --- When dark mode is active, override the article's child elements --- */
+
+.article-page.dark-reader-active .article-title,
+.article-page.dark-reader-active .article-content h2,
+.article-page.dark-reader-active .article-content h3,
+.article-page.dark-reader-active .article-content h4 {
+    color: #f1f1f1; /* Light color for headings */
+}
+
+.article-page.dark-reader-active .article-meta,
+.article-page.dark-reader-active .font-controls-label {
+    color: #a0a0a0; /* Softer color for secondary text */
+}
+
+.article-page.dark-reader-active .article-content,
+.article-page.dark-reader-active .article-content p {
+    color: #dcdcdc; /* Main text color */
+}
+
+.article-page.dark-reader-active .article-content a {
+    color: #a8d2ff; /* A nice blue for links in dark mode */
+}
+.article-page.dark-reader-active .article-content a:hover {
+    color: #d1e7ff;
+}
+
+/* Table of Contents */
+.article-page.dark-reader-active .toc-container {
+    background-color: #252525;
+    border-color: #444;
+}
+.article-page.dark-reader-active .toc-title {
+    color: #f1f1f1;
+    border-color: #444;
+}
+.article-page.dark-reader-active .toc-link {
+    color: #c0c0c0;
+}
+.article-page.dark-reader-active .toc-link:hover {
+    color: #ffffff;
+}
+
+/* Blockquotes, Code, etc. */
+.article-page.dark-reader-active .article-content blockquote {
+    color: #b0b0b0;
+    border-right-color: #555;
+}
+
+.article-page.dark-reader-active .article-content code {
+    background: #333;
+    color: #dcdcdc;
+}
+
+/* Font Size Controls */
+.article-page.dark-reader-active .font-control-btn {
+    background-color: #333;
+    border-color: #555;
+    color: #dcdcdc;
+}
+.article-page.dark-reader-active .font-control-btn:hover {
+    background-color: #444;
+}
+.article-page.dark-reader-active .font-control-btn:disabled {
+    background-color: #333;
+    opacity: 0.4;
+}
+
+/* --- Styles for the toggle button itself --- */
+
+.theme-toggle-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.theme-toggle-label {
+    font-size: 0.9rem;
+    color: var(--neutral-600);
+    margin-inline-end: 0.5rem;
+}
+
+.article-page.dark-reader-active .theme-toggle-label {
+    color: #a0a0a0; /* Softer color for the label in dark mode */
+}
+
+.theme-toggle-btn {
+    background-color: var(--neutral-100);
+    border: 1px solid var(--neutral-300);
+    color: var(--neutral-700);
+    padding: 0.3rem 0.8rem; /* Adjusted for text */
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 6px; /* A standard rounded rectangle */
+    cursor: pointer;
+    line-height: 1;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    min-width: 90px; /* Give it a consistent width */
+    text-align: center;
+}
+
+.theme-toggle-btn:hover {
+    background-color: var(--neutral-200);
+    border-color: var(--neutral-400);
+}
+
+/* Dark mode styles for the button */
+.article-page.dark-reader-active .theme-toggle-btn {
+    background-color: #333;
+    border-color: #555;
+    color: #dcdcdc;
+}
+
+.article-page.dark-reader-active .theme-toggle-btn:hover {
+    background-color: #444;
+}
+
+/* By default, show the "Go Dark" text */
+.theme-text-light {
+    display: none;
+}
+
+/* When dark mode is active, flip the visibility */
+.article-page.dark-reader-active .theme-text-dark {
+    display: none; /* Hide "الوضع الداكن" */
+}
+
+.article-page.dark-reader-active .theme-text-light {
+    display: inline; /* Show "الوضع الفاتح" */
+}
+
+/* Hide one of the icons based on the theme */
+.article-page:not(.dark-reader-active) .theme-toggle-btn .icon-moon { display: block; }
+.article-page:not(.dark-reader-active) .theme-toggle-btn .icon-sun { display: none; }
+.article-page.dark-reader-active .theme-toggle-btn .icon-moon { display: none; }
+.article-page.dark-reader-active .theme-toggle-btn .icon-sun { display: block; }
+
+.article-page.dark-reader-active .share-container {
+    border-top-color: #444; /* A visible dark grey border */
+}
+
+.article-page.dark-reader-active .share-title {
+    color: #f1f1f1; /* A bright, readable color */
+}
+
+/* The X/Twitter button is black, which is invisible on a dark background.
+   We'll invert it to be a light button with black text. */
+.article-page.dark-reader-active .share-button.x-twitter {
+    background-color: #f0f0f0;
+    color: #000000;
+}
+
+/* The default "Copy Link" button is a dark grey, so we'll make it
+   a medium grey that stands out better. */
+.article-page.dark-reader-active .share-button.copy-link {
+    background-color: #4a4a4a;
+    color: #f0f0f0;
+}
+
+.article-page.dark-reader-active .article-footer {
+    border-top-color: #444; /* A visible dark grey border */
+}
+
+.article-page.dark-reader-active .tag-link {
+    background-color: #333; /* Dark background for the tag */
+    color: #dcdcdc;          /* Light text for the tag */
+}
+
+.article-page.dark-reader-active .tag-link:hover {
+    background-color: #444; /* Slightly lighter background on hover */
+    color: #ffffff;          /* Pure white text on hover for emphasis */
+}

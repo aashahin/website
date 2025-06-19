@@ -1,0 +1,173 @@
+---
+import Layout from '../../components/layout/Layout.astro';
+import {getCollection} from 'astro:content';
+import {
+    transformPostToArticle,
+    getPublishedArticles,
+    sortArticlesByDate,
+    filterArticles,
+} from '../../utils/articles';
+import {
+    getUniqueTags,
+    searchArticles,
+    paginateArticles
+} from '../../utils/articleHelper';
+import type {Article, Post} from '../../types/articles';
+import '../../styles/pages/articles/articles.css';
+
+const posts: Post[] = await getCollection("posts");
+const allArticles: Article[] = posts.map(transformPostToArticle);
+const publishedArticles = getPublishedArticles(allArticles);
+const urlParams = Astro.url.searchParams;
+const currentTag = urlParams.get('tag');
+const searchQuery = urlParams.get('q');
+const currentPage = parseInt(urlParams.get('page') || '1', 10);
+const ARTICLES_PER_PAGE = 8;
+let filteredArticles = [...publishedArticles];
+if (currentTag) {
+    filteredArticles = filterArticles(filteredArticles, {tag: currentTag});
+}
+if (searchQuery) {
+    filteredArticles = searchArticles(filteredArticles, searchQuery);
+}
+
+const sortedArticles = sortArticlesByDate(filteredArticles);
+const paginatedData = paginateArticles(sortedArticles, currentPage, ARTICLES_PER_PAGE);
+const uniqueTags = getUniqueTags(publishedArticles);
+const buildFilterUrl = (params: Record<string, string>) => {
+    const url = new URLSearchParams();
+    if (currentTag && !('tag' in params)) url.set('tag', currentTag);
+    if (searchQuery && !('q' in params)) url.set('q', searchQuery);
+    Object.entries(params).forEach(([key, value]) => {
+        if (value) url.set(key, value);
+        else url.delete(key);
+    });
+    return `/articles${url.toString() ? `?${url.toString()}` : ''}`;
+};
+const resultsMessage = () => {
+    if (paginatedData.totalArticles === 0) {
+        return "لم يتم العثور على مقالات.";
+    }
+    const start = (currentPage - 1) * ARTICLES_PER_PAGE + 1;
+    const end = Math.min(currentPage * ARTICLES_PER_PAGE, paginatedData.totalArticles);
+    return `عرض ${start}-${end} من ${paginatedData.totalArticles} مقالاً.`;
+};
+---
+
+<Layout title="المقالات">
+    <main class="articles-page">
+        <div class="articles-layout container">
+            <aside class="articles-sidebar">
+                <div class="sidebar-group">
+                    <h3 class="sidebar-group-title" id="search-label">بحث</h3>
+                    <form class="search-form" action="/articles" method="get" role="search">
+                        <label>
+                            <input
+                                    type="search"
+                                    name="q"
+                                    placeholder="كلمة مفتاحية..."
+                                    value={searchQuery || ''}
+                                    class="search-input"
+                                    aria-labelledby="search-label"
+                            />
+                        </label>
+                        {currentTag && <input type="hidden" name="tag" value={currentTag}/>}
+                    </form>
+                </div>
+
+                {uniqueTags.length > 0 && (
+                        <div class="sidebar-group">
+                            <h3 class="sidebar-group-title" id="tags-label">الوسوم</h3>
+                            <ul class="filter-links" aria-labelledby="tags-label">
+                                <li>
+                                    <a
+                                            href={buildFilterUrl({tag: ''})}
+                                            class:list={['filter-link', {active: !currentTag}]}
+                                            aria-current={!currentTag ? 'page' : false}
+                                    >الكل</a>
+                                </li>
+                                {uniqueTags.map(tag => (
+                                        <li>
+                                            <a
+                                                    href={buildFilterUrl({tag})}
+                                                    class:list={['filter-link', {active: currentTag === tag}]}
+                                                    aria-current={currentTag === tag ? 'page' : false}
+                                            >{tag}</a>
+                                        </li>
+                                ))}
+                            </ul>
+                        </div>
+                )}
+            </aside>
+
+            <div class="articles-main-content" role="region" aria-live="polite">
+                <div class="sr-only" aria-live="polite" aria-atomic="true">
+                    {resultsMessage()}
+                </div>
+
+                {(currentTag || searchQuery) && (
+                        <div class="active-filters">
+                            <span class="active-filters-label">تصفية حسب:</span>
+                            {searchQuery && <span class="filter-chip">بحث: "{searchQuery}"</span>}
+                            {currentTag && <span class="filter-chip">{currentTag}</span>}
+                            <a href="/articles" class="clear-all" aria-label="مسح كل الفلاتر النشطة">مسح الكل</a>
+                        </div>
+                )}
+
+                {paginatedData.totalArticles > 0 ? (
+                        <>
+                            <div class="articles-list">
+                                {paginatedData.articles.map((article) => (
+                                        <article class="article" aria-labelledby={`article-title-${article.slug}`}>
+                                            <a href={`/articles/${article.slug}`} class="article-link">
+                                                <div class="article-meta">
+                                                    <time datetime={article.publishedDate}>{article.date}</time>
+                                                    <span class="reading-time">{article.readTime}</span>
+                                                </div>
+                                                <h2 class="article-title"
+                                                    id={`article-title-${article.slug}`}>{article.title}</h2>
+                                                <p class="article-excerpt">{article.excerpt}</p>
+                                            </a>
+                                        </article>
+                                ))}
+                            </div>
+
+                            {paginatedData.totalPages > 1 && (
+                                    <nav class="pagination" aria-label="ترقيم الصفحات">
+                                        {paginatedData.hasPrevPage && (
+                                                <a href={buildFilterUrl({page: (currentPage - 1).toString()})}
+                                                   class="pagination-link"
+                                                   rel="prev"
+                                                >
+                                                    <span aria-hidden="true">→</span>
+                                                    <span class="sr-only">الصفحة السابقة</span>
+                                                    <span>السابق</span>
+                                                </a>
+                                        )}
+                                        <span class="pagination-info" aria-current="page"
+                                              aria-label={`الصفحة ${currentPage} من ${paginatedData.totalPages}`}>
+                                        {currentPage} من {paginatedData.totalPages}
+                                    </span>
+                                        {paginatedData.hasNextPage && (
+                                                <a href={buildFilterUrl({page: (currentPage + 1).toString()})}
+                                                   class="pagination-link"
+                                                   rel="next"
+                                                >
+                                                    <span>التالي</span>
+                                                    <span class="sr-only">الصفحة التالية</span>
+                                                    <span aria-hidden="true">←</span>
+                                                </a>
+                                        )}
+                                    </nav>
+                            )}
+                        </>
+                ) : (
+                        <div class="empty-state">
+                            <p>لم يتم العثور على مقالات تطابق بحثك.</p>
+                            <a href="/articles" class="reset-link">عرض جميع المقالات</a>
+                        </div>
+                )}
+            </div>
+        </div>
+    </main>
+</Layout>

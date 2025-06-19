@@ -1,0 +1,303 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../../components/layout/Layout.astro";
+import { transformPostToArticle } from "../../utils/articles";
+import { getRelatedArticles } from "../../utils/articleHelper";
+import type { Article, Post } from "../../types/articles";
+
+// Import all necessary stylesheets
+import "../../styles/pages/articles/article-detail.css";
+import "../../styles/pages/articles/related-articles.css";
+import "../../styles/shared/share-buttons.css";
+import "../../styles/shared/copy-code.css";
+import "../../styles/shared/markdown-styles.css";
+import "../../styles/shared/article-dark-mode.css"; // <-- Import the new dark mode styles
+
+// We will fetch the full data for each page individually below.
+export async function getStaticPaths() {
+  const allPosts: Post[] = await getCollection("posts");
+
+  const publishedPosts = allPosts.filter(
+    (post) => post && post.data && post.data.status === "published"
+  );
+
+  return publishedPosts.map((post) => ({
+    params: { slug: post.slug }
+  }));
+}
+
+// Get the unique slug for this page from Astro.params.
+const { slug } = Astro.params;
+
+// Use getEntry() to reliably fetch the single, correct post for this page.
+const currentPost: any = await getEntry("posts", slug as string);
+
+// Safety Check: If a slug somehow doesn't match an entry (e.g., bad link), redirect to 404.
+if (!currentPost) {
+  return Astro.redirect("/404");
+}
+
+// Now that we have a guaranteed valid `currentPost`, we can safely transform it.
+const currentArticle: Article = transformPostToArticle(currentPost);
+const { Content, headings } = await currentPost.render();
+
+// Fetch all posts to find related ones.
+const allPostsForRelated: Post[] = await getCollection("posts");
+
+// Filter for only valid, published articles to create a clean list for comparison.
+const allPublishedArticles: Article[] = allPostsForRelated
+  .filter(p => p && p.data && p.data.status === "published")
+  .map(p => transformPostToArticle(p));
+
+// Now, safely find related articles.
+const relatedArticles = getRelatedArticles(currentArticle, allPublishedArticles, 3);
+
+// --- Prepare variables for sharing ---
+const pageUrl = Astro.url.href;
+const encodedTitle = encodeURIComponent(currentArticle.title);
+const encodedUrl = encodeURIComponent(pageUrl);
+const whatsappText = encodeURIComponent(`${currentArticle.title} ${pageUrl}`);
+---
+
+<Layout title={currentArticle.title} description={currentArticle.excerpt} isFixed={false}
+        featuredImage={currentArticle.featuredImage}>
+  <main class="article-page">
+    <article class="article-container">
+      <!-- Article Header -->
+      <header class="article-header">
+        <h1 class="article-title">{currentArticle.title}</h1>
+        <div class="article-meta">
+          <time datetime={currentArticle.publishedDate}>{currentArticle.date}</time>
+          <span class="meta-separator">•</span>
+          <span class="reading-time">{currentArticle.readTime}</span>
+        </div>
+
+        <!-- Wrapper for all controls -->
+        <div class="article-controls-wrapper">
+          <!-- Font Size Controls -->
+          <div class="font-size-controls">
+            <span class="font-controls-label">حجم الخط:</span>
+            <button id="zoom-out-btn" class="font-control-btn" aria-label="Decrease font size">A-</button>
+            <button id="zoom-reset-btn" class="font-control-btn" aria-label="Reset font size">إعادة ضبط</button>
+            <button id="zoom-in-btn" class="font-control-btn" aria-label="Increase font size">A+</button>
+          </div>
+
+          <!-- Theme Toggle Button -->
+          <div class="theme-toggle-wrapper">
+            <span class="theme-toggle-label">الوضع:</span>
+            <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle dark reader mode">
+              <span class="theme-text-dark">الوضع الداكن</span>
+              <span class="theme-text-light">الوضع الفاتح</span>
+            </button>
+          </div>
+
+
+        </div>
+      </header>
+
+      <!-- Featured Image -->
+      {currentArticle.featuredImage && (
+        <img
+          src={currentArticle.featuredImage}
+          alt={currentArticle.title}
+          class="featured-image"
+          width="1200"
+          height="630"
+        />
+      )}
+
+      <!-- Table of Contents -->
+      {headings && headings.length > 1 && (
+        <aside class="toc-container">
+          <h2 class="toc-title">محتويات المقال</h2>
+          <ul class="toc-list">
+            {headings.map((heading: any) => (
+              <li class={`toc-item depth-${heading.depth}`}>
+                <a href={`#${heading.slug}`} class="toc-link">
+                  {heading.text.replace(/^\d+\.\s*/, "")}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
+
+      <!-- Article Content -->
+      <div class="article-content">
+        <Content />
+      </div>
+
+      <!-- Share Section -->
+      <aside class="share-container">
+        <h3 class="share-title">شارك هذا المقال</h3>
+        <div class="share-buttons">
+          <a href={`https://api.whatsapp.com/send?text=${whatsappText}`} target="_blank" rel="noopener noreferrer"
+             class="share-button whatsapp" aria-label="Share on WhatsApp">WhatsApp</a>
+          <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`} target="_blank"
+             rel="noopener noreferrer" class="share-button facebook" aria-label="Share on Facebook">Facebook</a>
+          <a href={`https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`} target="_blank"
+             rel="noopener noreferrer" class="share-button telegram" aria-label="Share on Telegram">Telegram</a>
+          <a href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`} target="_blank"
+             rel="noopener noreferrer" class="share-button x-twitter" aria-label="Share on X">X</a>
+          <button id="copy-link-btn" class="share-button copy-link" data-copy-text="انسخ الرابط"
+                  data-copied-text="تم النسخ!">
+            انسخ الرابط
+          </button>
+        </div>
+      </aside>
+
+      <!-- Article Tags -->
+      {currentArticle.tags && currentArticle.tags.length > 0 && (
+        <footer class="article-footer">
+          <div class="article-tags">
+            {currentArticle.tags.map(tag => (
+              <a href={`/articles?tag=${encodeURIComponent(tag)}`} class="tag-link">
+                {tag}
+              </a>
+            ))}
+          </div>
+        </footer>
+      )}
+    </article>
+
+    <!-- Related Articles Section -->
+    {relatedArticles.length > 0 && (
+      <aside class="related-articles-section">
+        <div class="related-articles-container">
+          <h2 class="related-articles-title">مقالات ذات صلة</h2>
+          <ul class="related-articles-list">
+            {relatedArticles.map(related => (
+              <li>
+                <a href={`/articles/${related.slug}`} class="related-article-card"
+                   aria-label={`Read article: ${related.title}`}>
+                  <div class="related-article-content-wrapper">
+                    <h3 class="related-article-title">{related.title}</h3>
+                    <p class="related-article-excerpt">{related.excerpt}</p>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    )}
+  </main>
+</Layout>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    // --- 1. SHARE LINK COPY FUNCTIONALITY ---
+    const copyBtn = document.getElementById("copy-link-btn");
+    if (copyBtn) {
+      const originalText = copyBtn.dataset.copyText || "نسخ الرابط";
+      const successText = copyBtn.dataset.copiedText || "تم النسخ!";
+      copyBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          copyBtn.textContent = successText;
+          copyBtn.classList.add("copied");
+          setTimeout(() => {
+            copyBtn.textContent = originalText;
+            copyBtn.classList.remove("copied");
+          }, 2000);
+        }).catch(err => {
+          console.error("Failed to copy link:", err);
+          alert("Could not copy link to clipboard.");
+        });
+      });
+    }
+
+    // --- 2. CODE BLOCK COPY FUNCTIONALITY ---
+    document.querySelectorAll(".article-content pre").forEach((preElement) => {
+      const codeText = preElement.querySelector("code")?.innerText;
+      if (!codeText) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "code-block-wrapper";
+      preElement.parentNode?.insertBefore(wrapper, preElement);
+      wrapper.appendChild(preElement);
+
+      const copyCodeBtn = document.createElement("button");
+      copyCodeBtn.className = "copy-code-btn";
+      copyCodeBtn.textContent = "Copy";
+      copyCodeBtn.setAttribute("aria-label", "Copy code to clipboard");
+      wrapper.appendChild(copyCodeBtn);
+
+      copyCodeBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(codeText).then(() => {
+          copyCodeBtn.textContent = "Copied!";
+          copyCodeBtn.classList.add("copied");
+          setTimeout(() => {
+            copyCodeBtn.textContent = "Copy";
+            copyCodeBtn.classList.remove("copied");
+          }, 2000);
+        }).catch(err => {
+          console.error("Failed to copy code:", err);
+          copyCodeBtn.textContent = "Error";
+        });
+      });
+    });
+
+    // --- 3. FONT SIZE ZOOM FUNCTIONALITY ---
+    const articleContent: any = document.querySelector(".article-content");
+    const zoomInBtn: any = document.getElementById("zoom-in-btn");
+    const zoomOutBtn: any = document.getElementById("zoom-out-btn");
+    const zoomResetBtn: any = document.getElementById("zoom-reset-btn");
+
+    if (articleContent && zoomInBtn && zoomOutBtn && zoomResetBtn) {
+      const STORAGE_KEY = "article_font_size_rem";
+      const DEFAULT_SIZE = 1.1;
+      const MAX_SIZE = 1.5;
+      const MIN_SIZE = 0.9;
+      const STEP = 0.1;
+      let currentSize: number;
+
+      const applyFontSize = (size: number) => {
+        currentSize = Math.max(MIN_SIZE, Math.min(size, MAX_SIZE));
+        currentSize = Math.round(currentSize * 10) / 10;
+        articleContent.style.setProperty("--article-font-size", `${currentSize}rem`);
+        localStorage.setItem(STORAGE_KEY, currentSize.toString());
+        updateButtonStates();
+      };
+
+      const updateButtonStates = () => {
+        zoomInBtn.disabled = currentSize >= MAX_SIZE;
+        zoomOutBtn.disabled = currentSize <= MIN_SIZE;
+      };
+
+      zoomInBtn.addEventListener("click", () => applyFontSize(currentSize + STEP));
+      zoomOutBtn.addEventListener("click", () => applyFontSize(currentSize - STEP));
+      zoomResetBtn.addEventListener("click", () => applyFontSize(DEFAULT_SIZE));
+
+      const savedSize = localStorage.getItem(STORAGE_KEY);
+      applyFontSize(savedSize ? parseFloat(savedSize) : DEFAULT_SIZE);
+    }
+
+    // --- 4. ARTICLE-ONLY DARK MODE FUNCTIONALITY ---
+    const themeToggleBtn = document.getElementById("theme-toggle-btn");
+    const articlePage = document.querySelector(".article-page");
+    const THEME_STORAGE_KEY = "article_theme";
+
+    if (themeToggleBtn && articlePage) {
+      const applyTheme = (theme: string) => {
+        if (theme === "dark") {
+          articlePage.classList.add("dark-reader-active");
+        } else {
+          articlePage.classList.remove("dark-reader-active");
+        }
+        localStorage.setItem(THEME_STORAGE_KEY, theme);
+      };
+
+      themeToggleBtn.addEventListener("click", () => {
+        const currentTheme = articlePage.classList.contains("dark-reader-active") ? "dark" : "light";
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        applyTheme(newTheme);
+      });
+
+      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      if (savedTheme) {
+        applyTheme(savedTheme);
+      }
+    }
+  });
+</script>

@@ -1,84 +1,142 @@
 ---
-import { Icon } from "astro-icon/components";
-import "../../styles/articles.css";
+import {Icon} from "astro-icon/components";
+import {getCollection} from "astro:content";
+import {transformPostToArticle, getPublishedArticles, sortArticlesByDate} from "../../utils/articles";
+import type {Article} from "../../types/articles";
+import "../../styles/pages/home/articles.css";
 
-const articles = [
-    {
-        title: "مستقبل تطوير الويب مع React 19",
-        excerpt:
-            "نظرة شاملة على الميزات الجديدة والتحسينات المتوقعة في الإصدار القادم من React",
-        date: "2024-06-05",
-        readTime: "8 دقائق",
-        category: "تطوير",
-    },
-    {
-        title: "أفضل ممارسات الأمان في تطبيقات Node.js",
-        excerpt: "دليل شامل لحماية تطبيقاتك من الثغرات الأمنية الشائعة",
-        date: "2024-05-28",
-        readTime: "12 دقيقة",
-        category: "أمان",
-    },
-    {
-        title: "بناء APIs قابلة للتوسع مع TypeScript",
-        excerpt: "استراتيجيات وأدوات لبناء واجهات برمجية قوية ومرنة",
-        date: "2024-05-15",
-        readTime: "10 دقائق",
-        category: "معمارية",
-    },
-];
+// Get posts from CMS
+const posts = await getCollection("posts");
 
-const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ar", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
-};
+// Transform and filter articles
+const allArticles: Article[] = posts.map(transformPostToArticle);
+const publishedArticles = getPublishedArticles(allArticles);
+const sortedArticles = sortArticlesByDate(publishedArticles);
+
+// Take only the latest 6 articles for display
+const articles = sortedArticles.slice(0, 6);
 ---
 
-<section id="articles" class="articles-section">
+<section id="articles" class="articles-section" aria-labelledby="articles-heading">
     <div class="section-container">
         <div class="section-grid">
             <div class="section-header">
                 <div class="section-header-sticky">
-                    <h2 class="section-title">المقالات</h2>
-                    <div class="section-divider"></div>
-                    <p class="section-description">
-                        أشارك خبرتي وأفكاري حول تطوير البرمجيات والتقنيات الحديثة.
-                    </p>
+                    <div class="section-header-content">
+                        <div class="section-title-group">
+                            <h2 id="articles-heading" class="section-title">المقالات</h2>
+                            <div class="section-divider" aria-hidden="true"></div>
+                            <p class="section-description">
+                                أشارك خبرتي وأفكاري حول تطوير البرمجيات والتقنيات الحديثة.
+                            </p>
+                        </div>
+
+                        {/* Always show "View All" link if there are articles */}
+                        {sortedArticles.length > 0 && (
+                                <a
+                                        href="/articles"
+                                        class="header-view-all-link"
+                                        aria-label={`عرض جميع المقالات (${sortedArticles.length} مقال متاح)`}
+                                >
+                                    <span class="link-text">عرض الكل</span>
+                                    <Icon name="tabler:arrow-left" size={14} aria-hidden="true" />
+                                </a>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            <div class="articles-list">
-                {articles.map((article) => (
-                        <article class="article-card">
-                            <div class="article-content">
-                                <div class="article-meta">
-                                    <span class="article-category">{article.category}</span>
-                                    <div class="article-details">
-                                        <div class="article-detail">
-                                            <Icon name="tabler:calendar" size={12}/>
-                                            <span>{formatDate(article.date)}</span>
-                                        </div>
-                                        <div class="article-detail">
-                                            <Icon name="tabler:clock" size={12}/>
-                                            <span>{article.readTime}</span>
-                                        </div>
-                                    </div>
-                                </div>
+            {articles.length > 0 ? (
+                    <div class="articles-list" role="list">
+                        {articles.map((article) => (
+                                <div role="listitem">
+                                    <a
+                                            href={`/articles/${article.slug}`}
+                                            class="article-card"
+                                            aria-labelledby={`title-${article.slug}`}
+                                            aria-describedby={`excerpt-${article.slug} meta-${article.slug}`}
+                                    >
+                                        <article>
+                                            <div class="article-content">
+                                                <div
+                                                        class="article-meta"
+                                                        id={`meta-${article.slug}`}
+                                                        aria-label={`تفاصيل المقال: فئة ${article.category}، تاريخ النشر ${article.date}، وقت القراءة ${article.readTime}`}
+                                                >
+                                            <span class="article-category" aria-label={`الفئة: ${article.category}`}>
+                                                {article.category}
+                                            </span>
+                                                    <div class="article-details">
+                                                        <div class="article-detail">
+                                                            <Icon
+                                                                    name="tabler:calendar"
+                                                                    size={12}
+                                                                    aria-hidden="true"
+                                                            />
+                                                            <span aria-label={`تاريخ النشر: ${article.date}`}>
+                                                        {article.date}
+                                                    </span>
+                                                        </div>
+                                                        <div class="article-detail">
+                                                            <Icon
+                                                                    name="tabler:clock"
+                                                                    size={12}
+                                                                    aria-hidden="true"
+                                                            />
+                                                            <span aria-label={`وقت القراءة: ${article.readTime}`}>
+                                                        {article.readTime}
+                                                    </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                <h3 class="article-title">{article.title}</h3>
-                                <p class="article-excerpt">{article.excerpt}</p>
+                                                <h3
+                                                        class="article-title"
+                                                        id={`title-${article.slug}`}
+                                                >
+                                                    {article.title}
+                                                </h3>
 
-                                <div class="article-read-more">
-                                    <span>اقرأ المزيد</span>
-                                    <Icon name="tabler:arrow-up-right" size={12}/>
+                                                <p
+                                                        class="article-excerpt"
+                                                        id={`excerpt-${article.slug}`}
+                                                >
+                                                    {article.excerpt}
+                                                </p>
+
+                                                <div class="article-read-more" aria-hidden="true">
+                                                    <span>اقرأ المزيد</span>
+                                                    <Icon name="tabler:arrow-up-right" size={12}/>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    </a>
                                 </div>
-                            </div>
-                        </article>
-                ))}
-            </div>
+                        ))}
+                    </div>
+            ) : (
+                    <div class="no-articles" role="status" aria-live="polite">
+                        <p>لا توجد مقالات منشورة حاليًا</p>
+                    </div>
+            )}
+
+            {/* Bottom "View All" link for additional emphasis when there are many articles */}
+            {sortedArticles.length > 6 && (
+                    <div class="articles-view-all">
+                        <a
+                                href="/articles"
+                                class="view-all-link"
+                                aria-label={`عرض جميع المقالات (${sortedArticles.length} مقال متاح)`}
+                        >
+                            <span class="link-text">عرض جميع المقالات ({sortedArticles.length})</span>
+                            <Icon
+                                    name="tabler:arrow-left"
+                                    size={16}
+                                    aria-hidden="true"
+                            />
+                        </a>
+                    </div>
+            )}
         </div>
     </div>
 </section>

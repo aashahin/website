@@ -2,7 +2,7 @@
 import {Icon} from "astro-icon/components";
 import {getCollection} from 'astro:content';
 import type {Project, ProjectStatus, StatusDisplayMap, StatusClassMap} from '../../types/projects';
-import "../../styles/work.css";
+import "../../styles/pages/home/work.css";
 
 const projects: Project[] = await getCollection('projects');
 const MAX_TECH_DISPLAY = 5; // Limit initial tech tags shown

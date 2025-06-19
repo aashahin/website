@@ -1,8 +1,10 @@
 ---
-import "../../styles/nav.css";
+import "../../styles/pages/home/nav.css";
+
+const {isFixed} = Astro.props;
 ---
 
-<nav class="navbar" aria-label="التنقل الرئيسي">
+<nav class="navbar" aria-label="التنقل الرئيسي" style={isFixed ? "position: fixed;" : "position: static;"}>
     <div class="navbar-content">
         <div class="navbar-inner">
             <div class="navbar-brand">
@@ -31,7 +33,7 @@ import "../../styles/nav.css";
                 <a href="/#work" class="navbar-link">
                     <span class="link-text">أعمال</span>
                 </a>
-                <a href="/#articles" class="navbar-link">
+                <a href="/articles" class="navbar-link">
                     <span class="link-text">مقالات</span>
                 </a>
                 <a href="/#contact" class="navbar-link">
@@ -44,7 +46,7 @@ import "../../styles/nav.css";
                 <div class="mobile-nav-content">
                     <a href="/#about" class="mobile-link">نبذة</a>
                     <a href="/#work" class="mobile-link">أعمال</a>
-                    <a href="/#articles" class="mobile-link">مقالات</a>
+                    <a href="/articles" class="mobile-link">مقالات</a>
                     <a href="/#contact" class="mobile-link">تواصل</a>
                 </div>
             </div>

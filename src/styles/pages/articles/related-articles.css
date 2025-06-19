@@ -1,0 +1,85 @@
+.related-articles-section {
+    margin-top: 5rem;
+    padding: 4rem 0;
+    border-top: 1px solid var(--neutral-200);
+    background-color: var(--neutral-50);
+}
+
+.related-articles-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.related-articles-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--neutral-800);
+    margin-bottom: 3rem;
+}
+
+.related-articles-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    list-style: none; /* Reset <ul> styles */
+    padding: 0;       /* Reset <ul> styles */
+    margin: 0;        /* Reset <ul> styles */
+}
+
+.related-article-card {
+    display: flex; /* Use flexbox to structure the card */
+    flex-direction: column;
+    height: 100%; /* Ensure cards in the same row have equal height */
+    background: #ffffff;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.related-article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-color: var(--neutral-300);
+    backdrop-filter: var(--neutral-600);
+}
+
+.related-article-content-wrapper {
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Allows this content area to fill remaining space */
+}
+
+.related-article-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--neutral-900);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.related-article-card:hover .related-article-title {
+    color: var(--neutral-600);
+}
+
+.related-article-excerpt {
+    font-size: 0.9rem;
+    color: var(--neutral-600);
+    line-height: 1.6;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limit to 3 lines */
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+}

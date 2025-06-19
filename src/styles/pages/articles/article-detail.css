@@ -1,0 +1,195 @@
+/* --- ARTICLE DETAIL PAGE STYLES --- */
+
+.article-page {
+    padding-top: 4rem;
+    background-color: #ffffff;
+    --article-font-size: 1.1rem; /* Default font size for article content */
+}
+
+/* Centered container for the article content */
+.article-container {
+    max-width: 720px; /* Optimal width for reading */
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* --- HEADER --- */
+.article-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.article-title {
+    font-size: 2.75rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--neutral-900);
+    margin: 0 0 1rem 0;
+    letter-spacing: -0.025em;
+}
+
+.article-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--neutral-600);
+}
+
+.meta-separator {
+    color: var(--neutral-300);
+}
+
+.article-controls-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* --- FONT SIZE CONTROLS --- */
+.font-size-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.font-controls-label {
+    font-size: 0.9rem;
+    color: var(--neutral-600);
+    margin-left: 0.5rem; /* For RTL, this will be margin-right */
+}
+
+.font-control-btn {
+    background-color: var(--neutral-100);
+    border: 1px solid var(--neutral-300);
+    color: var(--neutral-700);
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    line-height: 1;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    -webkit-tap-highlight-color: transparent; /* For mobile */
+}
+
+.font-control-btn:hover {
+    background-color: var(--neutral-200);
+    border-color: var(--neutral-400);
+}
+
+.font-control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--neutral-100);
+}
+
+#zoom-reset-btn {
+    font-weight: 600;
+}
+
+
+/* --- FEATURED IMAGE --- */
+.featured-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 3rem;
+    display: block;
+    background-color: var(--neutral-100);
+}
+
+/* --- TABLE OF CONTENTS --- */
+.toc-container {
+    background-color: var(--neutral-50);
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.toc-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--neutral-800);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--neutral-200);
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-item {
+    margin-bottom: 0.5rem;
+}
+.toc-item:last-child {
+    margin-bottom: 0;
+}
+
+.toc-link {
+    color: var(--neutral-700);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+    display: block;
+}
+
+.toc-link:hover {
+    color: var(--neutral-900);
+    text-decoration: underline;
+}
+
+/* Indentation for nested headings (RTL friendly) */
+.toc-item.depth-2 { padding-right: 1rem; }
+.toc-item.depth-3 { padding-right: 2rem; }
+.toc-item.depth-4 { padding-right: 3rem; }
+.toc-item.depth-5 { padding-right: 4rem; }
+.toc-item.depth-6 { padding-right: 5rem; }
+
+/* --- FOOTER & TAGS --- */
+.article-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--neutral-200);
+}
+
+.article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.tag-link {
+    display: inline-block;
+    background-color: var(--neutral-100);
+    color: var(--neutral-700);
+    padding: 0.35rem 0.85rem;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.tag-link:hover {
+    background-color: var(--neutral-200);
+    color: var(--neutral-900);
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 768px) {
+    .article-title {
+        font-size: 2rem;
+    }
+
+    .article-content {
+        /* font-size will be controlled by the JS, but we can set a smaller default for mobile if needed */
+        font-size: var(--article-font-size, 1rem);
+    }
+}
