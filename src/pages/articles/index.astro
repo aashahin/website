@@ -118,14 +118,14 @@ const resultsMessage = () => {
                         <>
                             <div class="articles-list">
                                 {paginatedData.articles.map((article) => (
-                                        <article class="article" aria-labelledby={`article-title-${article.slug}`}>
-                                            <a href={`/articles/${article.slug}`} class="article-link">
+                                        <article class="article" aria-labelledby={`article-title-${decodeURIComponent(article.slug)}`}>
+                                            <a href={`/articles/${decodeURIComponent(article.slug)}`} class="article-link">
                                                 <div class="article-meta">
                                                     <time datetime={article.publishedDate}>{article.date}</time>
                                                     <span class="reading-time">{article.readTime}</span>
                                                 </div>
                                                 <h2 class="article-title"
-                                                    id={`article-title-${article.slug}`}>{article.title}</h2>
+                                                    id={`article-title-${decodeURIComponent(article.slug)}`}>{article.title}</h2>
                                                 <p class="article-excerpt">{article.excerpt}</p>
                                             </a>
                                         </article>

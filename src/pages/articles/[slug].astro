@@ -24,7 +24,7 @@ export async function getStaticPaths() {
   );
 
   return publishedPosts.map((post) => ({
-    params: { slug: post.slug }
+    params: { slug: decodeURIComponent(post.slug) }
   }));
 }
 
@@ -32,7 +32,7 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 
 // Use getEntry() to reliably fetch the single, correct post for this page.
-const currentPost: any = await getEntry("posts", slug as string);
+const currentPost: any = await getEntry("posts", decodeURIComponent(slug) as string);
 
 // Safety Check: If a slug somehow doesn't match an entry (e.g., bad link), redirect to 404.
 if (!currentPost) {
@@ -86,10 +86,10 @@ const whatsappText = encodeURIComponent(`${currentArticle.title} ${pageUrl}`);
 
           <!-- Theme Toggle Button -->
           <div class="theme-toggle-wrapper">
-            <span class="theme-toggle-label">الوضع:</span>
+            <span class="theme-toggle-label">وضع القراءة:</span>
             <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle dark reader mode">
-              <span class="theme-text-dark">الوضع الداكن</span>
-              <span class="theme-text-light">الوضع الفاتح</span>
+              <span class="theme-text-dark">داكن</span>
+              <span class="theme-text-light">فاتح</span>
             </button>
           </div>
 
@@ -170,7 +170,7 @@ const whatsappText = encodeURIComponent(`${currentArticle.title} ${pageUrl}`);
           <ul class="related-articles-list">
             {relatedArticles.map(related => (
               <li>
-                <a href={`/articles/${related.slug}`} class="related-article-card"
+                <a href={`/articles/${decodeURIComponent(related.slug)}`} class="related-article-card"
                    aria-label={`Read article: ${related.title}`}>
                   <div class="related-article-content-wrapper">
                     <h3 class="related-article-title">{related.title}</h3>

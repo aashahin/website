@@ -59,11 +59,6 @@
     border-right-color: #555;
 }
 
-.article-page.dark-reader-active .article-content code {
-    background: #333;
-    color: #dcdcdc;
-}
-
 /* --- Dark Mode Table Styles --- */
 .article-page.dark-reader-active .article-content .table-wrapper {
     border-color: #444;
@@ -200,4 +195,9 @@
 .article-page.dark-reader-active .tag-link:hover {
     background-color: #444; /* Slightly lighter background on hover */
     color: #ffffff;          /* Pure white text on hover for emphasis */
+}
+
+.page-container ::selection {
+    background-color: var(--neutral-200);
+    color: var(--neutral-900);
 }
