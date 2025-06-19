@@ -19,52 +19,58 @@ import "../../styles/contact.css";
         <div class="contact-details">
           <div class="contact-item">
             <Icon
-              name="tabler:mail"
-              size={18}
-              class="contact-icon"
-              aria-hidden="true"
+                name="tabler:mail"
+                size={18}
+                class="contact-icon"
+                aria-hidden="true"
             />
             <a
-              href="mailto:info@abdelrahman.co"
-              class="contact-link"
-              aria-label="إرسال بريد إلكتروني إلى info@abdelrahman.co"
+                href="mailto:info@abdelrahman.co"
+                class="contact-link"
+                aria-label="إرسال بريد إلكتروني إلى info@abdelrahman.co"
             >
               info@abdelrahman.co
             </a>
           </div>
 
           <div
-            class="social-links"
-            role="list"
-            aria-label="روابط التواصل الاجتماعي"
+              class="social-links"
+              role="list"
+              aria-label="روابط التواصل الاجتماعي"
           >
-            <a
-              href="https://github.com/aashahin"
-              class="social-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="ملف GitHub الشخصي (يفتح في نافذة جديدة)"
-            >
-              <Icon name="tabler:brand-github" size={23} aria-hidden="true" />
-            </a>
-            <a
-              href="https://t.me/abshahin"
-              class="social-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="التواصل عبر Telegram (يفتح في نافذة جديدة)"
-            >
-              <Icon name="tabler:brand-telegram" size={23} aria-hidden="true" />
-            </a>
-            <a
-              href="https://wa.me/201119402478"
-              class="social-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="التواصل عبر WhatsApp (يفتح في نافذة جديدة)"
-            >
-              <Icon name="tabler:brand-whatsapp" size={23} aria-hidden="true" />
-            </a>
+            <div role="listitem">
+              <a
+                  href="https://github.com/aashahin"
+                  class="social-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="ملف GitHub الشخصي (يفتح في نافذة جديدة)"
+              >
+                <Icon name="tabler:brand-github" size={23} aria-hidden="true" />
+              </a>
+            </div>
+            <div role="listitem">
+              <a
+                  href="https://t.me/abshahin"
+                  class="social-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="التواصل عبر Telegram (يفتح في نافذة جديدة)"
+              >
+                <Icon name="tabler:brand-telegram" size={23} aria-hidden="true" />
+              </a>
+            </div>
+            <div role="listitem">
+              <a
+                  href="https://wa.me/201119402478"
+                  class="social-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="التواصل عبر WhatsApp (يفتح في نافذة جديدة)"
+              >
+                <Icon name="tabler:brand-whatsapp" size={23} aria-hidden="true" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -74,14 +80,14 @@ import "../../styles/contact.css";
           <div class="form-group">
             <label for="name" class="form-label">الاسم *</label>
             <input
-              id="name"
-              name="name"
-              type="text"
-              class="form-input"
-              placeholder="اسمك الكامل"
-              aria-describedby="name-error"
-              required
-              autocomplete="name"
+                id="name"
+                name="name"
+                type="text"
+                class="form-input"
+                placeholder="اسمك الكامل"
+                aria-describedby="name-error"
+                required
+                autocomplete="name"
             />
             <div id="name-error" class="error-message" aria-live="polite"></div>
           </div>
@@ -89,14 +95,14 @@ import "../../styles/contact.css";
           <div class="form-group">
             <label for="email" class="form-label">البريد الإلكتروني *</label>
             <input
-              id="email"
-              name="email"
-              type="email"
-              class="form-input"
-              placeholder="email@example.com"
-              aria-describedby="email-error"
-              required
-              autocomplete="email"
+                id="email"
+                name="email"
+                type="email"
+                class="form-input"
+                placeholder="email@example.com"
+                aria-describedby="email-error"
+                required
+                autocomplete="email"
             />
             <div id="email-error" class="error-message" aria-live="polite">
             </div>
@@ -105,13 +111,13 @@ import "../../styles/contact.css";
           <div class="form-group">
             <label for="subject" class="form-label">الموضوع *</label>
             <input
-              id="subject"
-              name="subject"
-              type="text"
-              class="form-input"
-              placeholder="موضوع الرسالة"
-              aria-describedby="subject-error"
-              required
+                id="subject"
+                name="subject"
+                type="text"
+                class="form-input"
+                placeholder="موضوع الرسالة"
+                aria-describedby="subject-error"
+                required
             />
             <div id="subject-error" class="error-message" aria-live="polite">
             </div>
@@ -120,21 +126,21 @@ import "../../styles/contact.css";
           <div class="form-group">
             <label for="message" class="form-label">الرسالة *</label>
             <textarea
-              id="message"
-              name="message"
-              rows={4}
-              class="form-textarea"
-              placeholder="أخبرني عن مشروعك..."
-              aria-describedby="message-error"
-              required></textarea>
+                id="message"
+                name="message"
+                rows={4}
+                class="form-textarea"
+                placeholder="أخبرني عن مشروعك..."
+                aria-describedby="message-error"
+                required></textarea>
             <div id="message-error" class="error-message" aria-live="polite">
             </div>
           </div>
 
           <button
-            type="submit"
-            class="form-submit"
-            aria-describedby="submit-status"
+              type="submit"
+              class="form-submit"
+              aria-describedby="submit-status"
           >
             إرسال الرسالة
             <Icon name="tabler:arrow-up-right" size={16} aria-hidden="true" />

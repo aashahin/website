@@ -184,6 +184,17 @@ p {
     outline-offset: 2px;
 }
 
+/* Remove tap highlight color on mobile */
+input,
+textarea,
+button,
+select,
+div,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .navbar-links {

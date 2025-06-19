@@ -5,6 +5,7 @@ import type {Project, ProjectStatus, StatusDisplayMap, StatusClassMap} from '../
 import "../../styles/work.css";
 
 const projects: Project[] = await getCollection('projects');
+const MAX_TECH_DISPLAY = 5; // Limit initial tech tags shown
 
 // Helper function to format date to year
 const getYear = (date: Date): string => {
@@ -26,7 +27,7 @@ const formatStatus = (status: ProjectStatus): string => {
 const getStatusClass = (status: ProjectStatus): string => {
     const classMap: StatusClassMap = {
         'completed': 'completed',
-        'in-development': 'in-progress',
+        'in-development': 'in-development',
         'on-hold': 'on-hold',
         'archived': 'archived'
     };
@@ -47,6 +48,17 @@ const sortedProjects: Project[] = projects.sort((a, b) => {
 const hasExternalLinks = (project: Project): boolean => {
     return !!(project.data.links?.live || project.data.links?.github || project.data.links?.documentation);
 };
+
+// Helper function to get limited technologies
+const getLimitedTech = (technologies: string[] = []) => {
+    if (technologies.length <= MAX_TECH_DISPLAY) {
+        return {visible: technologies, hidden: []};
+    }
+    return {
+        visible: technologies.slice(0, MAX_TECH_DISPLAY),
+        hidden: technologies.slice(MAX_TECH_DISPLAY)
+    };
+};
 ---
 
 {/* Work */}
@@ -55,7 +67,7 @@ const hasExternalLinks = (project: Project): boolean => {
         <div class="section-grid">
             <div class="section-header">
                 <div class="section-header-sticky">
-                    <h2 class="section-title">أعمال مختارة</h2>
+                    <h2 class="section-title">أحدث المشاريع</h2>
                     <div class="section-divider"></div>
                     <p class="section-description">
                         مجموعة من المشاريع التي عملت عليها مؤخراً، تظهر خبرتي في التقنيات
@@ -65,40 +77,98 @@ const hasExternalLinks = (project: Project): boolean => {
             </div>
 
             <div class="projects-list">
-                {sortedProjects.map((project: Project) => (
-                        <div class="project-card">
-                            <div class="project-content">
-                                <div class="project-header">
-                                    <div class="project-meta">
-                                    <span class="project-year">
-                                        {getYear(project.data.startDate)}
-                                    </span>
-                                        <span class={`project-status ${getStatusClass(project.data.status)}`}>
-                                        {formatStatus(project.data.status)}
-                                    </span>
-                                        {project.data.featured && (
-                                                <span class="featured-badge">مميز</span>
+                {sortedProjects.map((project: Project, index: number) => {
+                    const techData = getLimitedTech(project.data.technologies);
+                    return (
+                            <article class="project-card" data-project-id={index}>
+                                <div class="project-content">
+                                    <header class="project-header">
+                                        <div class="project-meta">
+                                            <time class="project-year" datetime={project.data.startDate.toISOString()}>
+                                                {getYear(project.data.startDate)}
+                                            </time>
+                                            <span class={`project-status ${getStatusClass(project.data.status)}`}>
+                                            {formatStatus(project.data.status)}
+                                        </span>
+                                            {project.data.featured && (
+                                                    <span class="featured-badge">مميز</span>
+                                            )}
+                                        </div>
+                                        {hasExternalLinks(project) && project.data.links?.live && (
+                                                <a
+                                                        href={project.data.links.live}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        class="project-link-icon"
+                                                        aria-label={`فتح مشروع ${project.data.title} في نافذة جديدة`}
+                                                >
+                                                    <Icon name="tabler:external-link" size={16} class="project-icon"/>
+                                                </a>
                                         )}
-                                    </div>
-                                    {hasExternalLinks(project) && (
-                                            <Icon name="tabler:external-link" size={16} class="project-icon"/>
+                                    </header>
+
+                                    {project.data.links?.live ? (
+                                            <a
+                                                    href={project.data.links.live}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="project-title-link"
+                                            >
+                                                <h3 class="project-title">{project.data.title}</h3>
+                                            </a>
+                                    ) : (
+                                            <h3 class="project-title">{project.data.title}</h3>
+                                    )}
+
+                                    <p class="project-description">{project.data.shortDescription}</p>
+
+                                    {techData.visible.length > 0 && (
+                                            <div class="project-tech">
+                                                {techData.visible.map((tech: string) => (
+                                                        <span class="tech-tag">{tech}</span>
+                                                ))}
+                                                {techData.hidden.length > 0 && (
+                                                        <button
+                                                                class="tech-expand-btn"
+                                                                data-hidden-count={techData.hidden.length}
+                                                                aria-label={`عرض ${techData.hidden.length} تقنيات إضافية`}
+                                                        >
+                                                            +{techData.hidden.length}
+                                                        </button>
+                                                )}
+                                                <div class="tech-hidden" style="display: none;">
+                                                    {techData.hidden.map((tech: string) => (
+                                                            <span class="tech-tag">{tech}</span>
+                                                    ))}
+                                                </div>
+                                            </div>
                                     )}
                                 </div>
-
-                                <h3 class="project-title">{project.data.title}</h3>
-                                <p class="project-description">{project.data.shortDescription}</p>
-
-                                {project.data.technologies && project.data.technologies.length > 0 && (
-                                        <div class="project-tech">
-                                            {project.data.technologies.map((tech: string) => (
-                                                    <span class="tech-tag">{tech}</span>
-                                            ))}
-                                        </div>
-                                )}
-                            </div>
-                        </div>
-                ))}
+                            </article>
+                    );
+                })}
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const expandButtons = document.querySelectorAll('.tech-expand-btn');
+
+        expandButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const projectTech = button.closest('.project-tech');
+                const hiddenTags = projectTech?.querySelector('.tech-hidden');
+
+                if (hiddenTags) {
+                    const isHidden = (hiddenTags as HTMLElement).style.display === 'none';
+                    (hiddenTags as HTMLElement).style.display = isHidden ? 'contents' : 'none';
+                    button.textContent = isHidden ? 'أقل' : `+${(button as HTMLElement).dataset.hiddenCount}`;
+                    button.setAttribute('aria-expanded', isHidden.toString());
+                }
+            });
+        });
+    });
+</script>

@@ -2,18 +2,150 @@
 import "../../styles/nav.css";
 ---
 
-<nav class="navbar">
+<nav class="navbar" aria-label="التنقل الرئيسي">
     <div class="navbar-content">
         <div class="navbar-inner">
             <div class="navbar-brand">
-                عبدالرحمن شاهين
+                <a href="/" aria-label="الصفحة الرئيسية">
+                    عبدالرحمن شاهين
+                </a>
             </div>
-            <div class="navbar-links">
-                <a href="/#about" class="navbar-link">نبذة</a>
-                <a href="/#work" class="navbar-link">أعمال</a>
-                <a href="/#articles" class="navbar-link">مقالات</a>
-                <a href="/#contact" class="navbar-link">تواصل</a>
+
+            <!-- Mobile menu button -->
+            <button
+                    class="mobile-menu-button"
+                    aria-label="فتح القائمة"
+                    aria-expanded="false"
+                    type="button"
+            >
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+
+            <!-- Desktop navigation -->
+            <div class="navbar-links desktop-nav">
+                <a href="/#about" class="navbar-link">
+                    <span class="link-text">نبذة</span>
+                </a>
+                <a href="/#work" class="navbar-link">
+                    <span class="link-text">أعمال</span>
+                </a>
+                <a href="/#articles" class="navbar-link">
+                    <span class="link-text">مقالات</span>
+                </a>
+                <a href="/#contact" class="navbar-link">
+                    <span class="link-text">تواصل</span>
+                </a>
+            </div>
+
+            <!-- Mobile navigation -->
+            <div class="mobile-nav" id="mobile-menu">
+                <div class="mobile-nav-content">
+                    <a href="/#about" class="mobile-link">نبذة</a>
+                    <a href="/#work" class="mobile-link">أعمال</a>
+                    <a href="/#articles" class="mobile-link">مقالات</a>
+                    <a href="/#contact" class="mobile-link">تواصل</a>
+                </div>
             </div>
         </div>
     </div>
 </nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Type assertions tell TypeScript the specific kind of element we expect
+        const mobileMenuButton = document.querySelector<HTMLButtonElement>('.mobile-menu-button');
+        const mobileNav = document.querySelector<HTMLElement>('.mobile-nav');
+        const body = document.body;
+
+        // --- Mobile Menu Toggle ---
+        if (mobileMenuButton && mobileNav) {
+            mobileMenuButton.addEventListener('click', () => {
+                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+                mobileMenuButton.setAttribute('aria-expanded', String(!isExpanded));
+                mobileMenuButton.setAttribute('aria-label', isExpanded ? 'فتح القائمة' : 'إغلاق القائمة');
+                mobileNav.classList.toggle('active');
+                mobileMenuButton.classList.toggle('active');
+                body.classList.toggle('mobile-menu-open');
+            });
+
+            const mobileLinks = document.querySelectorAll<HTMLAnchorElement>('.mobile-link');
+            const closeMobileMenu = () => {
+                mobileNav.classList.remove('active');
+                mobileMenuButton.classList.remove('active');
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
+                mobileMenuButton.setAttribute('aria-label', 'فتح القائمة');
+                body.classList.remove('mobile-menu-open');
+            };
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+
+            document.addEventListener('click', (e: MouseEvent) => {
+                // Assert that e.target is a Node for the .contains() method
+                const target = e.target as Node;
+                if (!mobileMenuButton.contains(target) && !mobileNav.contains(target)) {
+                    closeMobileMenu();
+                }
+            });
+        }
+
+        // --- Active Link Highlighting on Scroll ---
+        const sections = document.querySelectorAll<HTMLElement>('section[id]');
+        const navLinks = document.querySelectorAll<HTMLAnchorElement>('.navbar-link, .mobile-link');
+        const nav = document.querySelector<HTMLElement>('.navbar');
+        const navHeight = nav ? nav.offsetHeight : 70;
+
+        const updateActiveLinkOnScroll = () => {
+            let currentSectionId: string = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - navHeight;
+                if (window.scrollY >= sectionTop - 1) {
+                    // Use the non-null assertion operator (!) because our selector 'section[id]' guarantees it exists.
+                    currentSectionId = section.getAttribute('id')!;
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `/#${currentSectionId}`) {
+                    link.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', updateActiveLinkOnScroll);
+        updateActiveLinkOnScroll();
+
+
+        // --- Smooth scroll behavior (using arrow function to avoid 'this') ---
+        document.querySelectorAll<HTMLAnchorElement>('a[href^="/#"]').forEach(anchor => {
+            anchor.addEventListener('click', (e: MouseEvent) => {
+                e.preventDefault();
+
+                // Get href from the element that the listener is attached to (e.currentTarget)
+                const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
+                if (!href) return;
+
+                const targetId = href.substring(2);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    // targetElement is HTMLElement, so it has offsetTop
+                    const elementPosition = targetElement.offsetTop;
+                    const offsetPosition = elementPosition - navHeight;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    history.pushState(null, '', href);
+                }
+            });
+        });
+    });
+</script>
