@@ -81,3 +81,43 @@
     border-radius: 8px;
     background-color: var(--neutral-100);
 }
+
+/* --- Table Styles --- */
+/* For optimal responsiveness, wrap tables in a div with the class "table-wrapper" */
+.article-content .table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--neutral-200);
+    border-radius: 8px;
+}
+
+.article-content table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95em;
+    text-align: right; /* Consistent with RTL theme */
+    margin-bottom: 0; /* Margin is handled by the wrapper */
+}
+
+.article-content th,
+.article-content td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--neutral-200);
+    vertical-align: top;
+}
+
+.article-content th {
+    font-weight: 600;
+    color: var(--neutral-900);
+    background-color: var(--neutral-100);
+}
+
+/* Zebra striping for better readability */
+.article-content tbody tr:nth-child(even) {
+    background-color: var(--neutral-50);
+}
+
+/* Remove bottom border from the last row for a cleaner look inside the wrapper */
+.article-content tr:last-child td {
+    border-bottom: none;
+}

@@ -37,6 +37,7 @@
     border-radius: 8px;
     transition: all 0.2s ease;
     overflow: hidden;
+    max-width: 400px;
 }
 
 .related-article-card:hover {
