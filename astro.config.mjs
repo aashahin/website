@@ -10,6 +10,8 @@ import keystatic from "@keystatic/astro";
 
 import sitemap from "@astrojs/sitemap";
 
+import purgecss from "astro-purgecss";
+
 // https://astro.build/config
 export default defineConfig({
   output: "server",
@@ -31,7 +33,7 @@ export default defineConfig({
   adapter: cloudflare({
     imageService: "compile",
   }),
-  integrations: [icon(), react(), markdoc(), keystatic(), sitemap()],
+  integrations: [icon(), react(), markdoc(), keystatic(), sitemap(), purgecss()],
   vite: {
     resolve: {
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
