@@ -39,7 +39,7 @@
     --border-width: 1px;
 
     /* --- Global Styles --- */
-    font-size: var(--font-size-base);
+    font-size: var(--article-font-size, var(--font-size-base));
     line-height: var(--line-height-body);
     color: var(--color-text);
 }
