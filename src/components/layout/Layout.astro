@@ -9,7 +9,7 @@ import "@fontsource/ibm-plex-sans-arabic/600.css";
 
 import globalStyles from "../../styles/pages/home/global.css?raw";
 
-const { title, description, keywords, featuredImage, isFixed = true } = Astro.props;
+const { title, description, keywords, isFixed = true } = Astro.props;
 const metaDescription = description || "مهندس برمجيات بخبرة 8+ سنوات في تطوير التطبيقات الكاملة";
 const metaKeywords = keywords || "مهندس برمجيات, تطوير الويب, React, Node.js, MongoDB, PostgreSQL, Backend, Frontend, Full Stack, flutter, dart, python, javascript, js, typescript, wordpress, devops, security, Next.js, nextjs, astrojs, remixjs, flask api, api, rest api, nestjs, bunjs, elysiajs";
 ---
@@ -35,7 +35,6 @@ const metaKeywords = keywords || "مهندس برمجيات, تطوير الوي
   <meta property="og:site_name" content="عبدالرحمن شاهين" />
   <meta property="og:locale" content="ar_AR" />
   <meta property="og:updated_time" content={new Date().toISOString()} />
-  <meta property="og:image" content={featuredImage || "https://abdelrahman.co/og-image.png"} />
 
   <link rel="sitemap" href="/sitemap-index.xml" />
 

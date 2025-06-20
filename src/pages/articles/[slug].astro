@@ -61,8 +61,7 @@ const encodedUrl = encodeURIComponent(pageUrl);
 const whatsappText = encodeURIComponent(`${currentArticle.title} ${pageUrl}`);
 ---
 
-<Layout title={currentArticle.title} description={currentArticle.excerpt} isFixed={false}
-        featuredImage={currentArticle.featuredImage}>
+<Layout title={currentArticle.title} description={currentArticle.excerpt} isFixed={false}>
   <main class="article-page">
     <article class="article-container">
       <!-- Article Header -->

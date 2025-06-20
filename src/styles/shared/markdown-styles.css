@@ -1,123 +1,242 @@
-.article-content {
-    font-size: var(--article-font-size, 1.1rem);
-    line-height: 1.8;
-    color: var(--neutral-800);
-    transition: font-size 0.2s ease-in-out;
+/* ==========================================================================
+   Article Content: A self-contained styling system
+   ========================================================================== */
+
+:where(.article-content) {
+    /* --- Design Tokens / Custom Properties --- */
+    /* Define all core values here for easy customization and consistency. */
+
+    /* Colors */
+    --color-text: var(--neutral-800, #374151);
+    --color-heading: var(--neutral-900, #111827);
+    --color-subtle: var(--neutral-600, #4b5563);
+    --color-link: var(--neutral-900, #111827);
+    --color-link-hover: var(--neutral-600, #4b5563);
+    --color-border: var(--neutral-200, #e5e7eb);
+    --color-bg-subtle: var(--neutral-100, #f3f4f6);
+    --color-bg-code: var(--neutral-900, #111827);
+    --color-text-code: var(--neutral-100, #f3f4f6);
+
+    /* Typography (Slightly more compact scale) */
+    --font-size-sm:   clamp(0.875rem, 0.82rem + 0.2vw, 0.9375rem);  /* ~14px-15px */
+    --font-size-base: clamp(0.9375rem, 0.85rem + 0.4vw, 1.0625rem); /* ~15px-17px */
+    --font-size-h4:   clamp(1.125rem, 1.0rem + 0.6vw, 1.25rem);     /* ~18px-20px */
+    --font-size-h3:   clamp(1.3rem, 1.1rem + 1vw, 1.56rem);         /* ~21px-25px */
+    --font-size-h2:   clamp(1.5rem, 1.25rem + 1.25vw, 1.875rem);    /* ~24px-30px */
+    --font-size-h1:   clamp(1.8rem, 1.5rem + 1.5vw, 2.25rem);       /* ~29px-36px */
+    --line-height-body: 1.7;
+    --line-height-heading: 1.3;
+
+    /* Spacing */
+    --space-xs: 0.5rem;   /* 8px */
+    --space-s: 1rem;      /* 16px */
+    --space-m: 1.5rem;    /* 24px */
+    --space-l: 2rem;      /* 32px */
+    --space-xl: 3rem;     /* 48px */
+
+    /* Other */
+    --border-radius: 8px;
+    --border-width: 1px;
+
+    /* --- Global Styles --- */
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-body);
+    color: var(--color-text);
 }
 
-.article-content p,
-.article-content ul,
-.article-content ol,
-.article-content blockquote {
-    margin-bottom: 1.5rem;
+/* --- Block Level Elements --- */
+/* MODIFIED: Replaced .table-wrapper with table for consistent spacing */
+.article-content :is(p, ul, ol, blockquote, pre, table, figure, hr) {
+    margin-block-end: var(--space-m);
 }
 
-.article-content h2,
-.article-content h3,
-.article-content h4 {
-    color: var(--neutral-900);
-    line-height: 1.3;
-    margin: 2.5rem 0 1rem 0;
-    font-weight: 600;
+/* --- Headings --- */
+.article-content :is(h1, h2, h3, h4) {
+    color: var(--color-heading);
+    line-height: var(--line-height-heading);
+    margin-block: var(--space-xl) var(--space-s);
+    font-weight: 700;
 }
 
-.article-content h2 { font-size: 1.75rem; }
-.article-content h3 { font-size: 1.4rem; }
+.article-content h1 { font-size: var(--font-size-h1); }
+.article-content h2 { font-size: var(--font-size-h2); }
+.article-content h3 { font-size: var(--font-size-h3); }
+.article-content h4 { font-size: var(--font-size-h4); font-weight: 600; }
 
+/* --- Inline Elements --- */
 .article-content a {
-    color: var(--neutral-900);
+    color: var(--color-link);
     text-decoration: underline;
-    text-decoration-thickness: 1px;
+    text-decoration-thickness: 1.5px;
     text-underline-offset: 3px;
+    text-decoration-skip-ink: auto; /* Nicer underline rendering */
     transition: color 0.2s ease;
 }
 
-.article-content a:hover {
-    color: var(--neutral-600);
+.article-content a:hover,
+.article-content a:focus-visible {
+    color: var(--color-link-hover);
 }
 
-.article-content ul,
-.article-content ol {
-    padding-right: 2rem; /* RTL padding */
+.article-content :is(strong, b) { font-weight: 600; }
+.article-content :is(em, i) { font-style: italic; }
+
+/* --- Lists --- */
+.article-content :is(ul, ol) {
+    padding-inline-start: var(--space-l); /* Indent list */
+}
+.article-content :is(ul, ol) li::marker {
+    color: var(--color-subtle); /* Style the bullet points/numbers */
+}
+.article-content li {
+    margin-block-end: var(--space-xs);
+}
+.article-content li > :is(p, ul, ol) {
+    margin-block-end: 0; /* Remove bottom margin for elements nested in list items */
 }
 
+/* --- Blockquotes --- */
 .article-content blockquote {
-    border-right: 3px solid var(--neutral-200); /* RTL border */
-    padding-right: 1.5rem; /* RTL padding */
-    margin-right: 0;
-    font-style: italic;
-    color: var(--neutral-600);
+    padding: var(--space-m);
+    margin-inline: 0;
+    border-radius: var(--border-radius);
+    background-color: var(--color-bg-subtle);
+    border-inline-start: 4px solid var(--color-border);
+    font-size: var(--font-size-sm);
+    color: var(--color-subtle);
+}
+.article-content blockquote > :last-child {
+    margin-block-end: 0;
 }
 
-.article-content code {
-    background: var(--neutral-100);
-    color: var(--neutral-800);
-    padding: 0.2rem 0.4rem;
+/* --- Code --- */
+.article-content :not(pre) > code {
+    background: var(--color-bg-subtle);
+    color: var(--color-text);
+    padding: 0.2em 0.4em;
     border-radius: 4px;
-    font-size: 0.9em;
+    font-size: var(--font-size-sm);
 }
 
 .article-content pre {
     direction: ltr;
-    background: var(--neutral-900);
-    color: var(--neutral-100);
-    padding: 1.5rem;
-    border-radius: 8px;
+    background: var(--color-bg-code);
+    color: var(--color-text-code);
+    padding: var(--space-m);
+    border-radius: var(--border-radius);
     overflow-x: auto;
-    margin: 0; /* Reset margin as the wrapper will handle it */
-    max-height: 400px; /* limit height for long code blocks */
+    max-height: 400px;
 }
 
-.article-content pre code {
+.article-content pre > code {
+    font-size: 1em; /* Inherit from pre */
+    line-height: 1.5;
     background: none;
     padding: 0;
 }
 
-.article-content img {
+/* --- Media (Images & Figures) --- */
+.article-content :is(img, video) {
     max-width: 100%;
     height: auto;
     display: block;
-    margin: 2rem auto;
-    border-radius: 8px;
-    background-color: var(--neutral-100);
+    border-radius: var(--border-radius);
+    background-color: var(--color-bg-subtle); /* Placeholder bg for loading images */
 }
 
-/* --- Table Styles --- */
-/* For optimal responsiveness, wrap tables in a div with the class "table-wrapper" */
-.article-content .table-wrapper {
-    overflow-x: auto;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--neutral-200);
-    border-radius: 8px;
+.article-content figure {
+    margin-inline: 0;
 }
 
+.article-content figcaption {
+    margin-block-start: var(--space-xs);
+    font-size: var(--font-size-sm);
+    text-align: center;
+    color: var(--color-subtle);
+}
+
+/* --- Tables --- */
+/* This section has been updated with enhanced styles for better readability. */
 .article-content table {
-    width: 100%;
+    /* Responsive container behavior */
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    /* Styling */
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius);
     border-collapse: collapse;
-    font-size: 0.95em;
-    text-align: right; /* Consistent with RTL theme */
-    margin-bottom: 0; /* Margin is handled by the wrapper */
+    width: 100%;
+    font-size: var(--font-size-sm);
+    text-align: start;
+
+    /* Remove the border from the table itself since cells have borders */
+    border-spacing: 0;
 }
 
-.article-content th,
-.article-content td {
-    padding: 0.8rem 1rem;
-    border-bottom: 1px solid var(--neutral-200);
+.article-content :is(th, td) {
+    padding: var(--space-s) var(--space-m);
+    border-block-end: var(--border-width) solid var(--color-border);
     vertical-align: top;
 }
 
+/* Table Header (thead) styling */
 .article-content th {
     font-weight: 600;
-    color: var(--neutral-900);
-    background-color: var(--neutral-100);
+    color: var(--color-heading);
+    background-color: var(--color-bg-subtle);
+    text-align: inherit; /* Inherit from table for LTR/RTL support */
+    white-space: nowrap; /* Keep header text on one line */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.9em;
 }
 
-/* Zebra striping for better readability */
-.article-content tbody tr:nth-child(even) {
-    background-color: var(--neutral-50);
+/* Zebra-striping for rows in the table body (tbody) */
+.article-content tbody tr:nth-of-type(even) {
+    background-color: var(--color-bg-subtle);
 }
 
-/* Remove bottom border from the last row for a cleaner look inside the wrapper */
-.article-content tr:last-child td {
-    border-bottom: none;
+/* Remove the bottom border from the very last row of the table */
+.article-content tr:last-child > :is(td, th) {
+    border-block-end: none;
+}
+
+/* --- Horizontal Rule --- */
+.article-content hr {
+    border: none;
+    border-block-start: var(--border-width) solid var(--color-border);
+}
+
+
+/* ==========================================================================
+   Responsive Styles for Smaller Devices
+   ========================================================================== */
+@media (max-width: 680px) {
+    :where(.article-content) {
+        /* On mobile, slightly increase line-height for better readability */
+        --line-height-body: 1.8;
+
+        /* Reduce spacing on mobile to make content less sparse */
+        --space-m: 1.25rem;
+        --space-l: 1.5rem;
+        --space-xl: 2.25rem;
+    }
+
+    .article-content blockquote {
+        padding: var(--space-s);
+    }
+
+    .article-content pre {
+        padding: var(--space-s);
+        /* Consider removing side border-radius for full-width code blocks on mobile */
+        border-radius: 0;
+    }
+
+    /* Reduce table cell padding on mobile for more compact layout */
+    .article-content :is(th, td) {
+        padding: var(--space-s);
+    }
 }

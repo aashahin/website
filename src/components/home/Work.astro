@@ -188,20 +188,17 @@ const getLimitedTech = (technologies: string[] = []) => {
     const expandButtons = document.querySelectorAll(".tech-expand-btn");
 
     expandButtons.forEach(button => {
-      document.addEventListener("astro:page-load", () => {
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        const projectTech = button.closest(".project-tech");
+        const hiddenTags = projectTech?.querySelector(".tech-hidden");
 
-        button.addEventListener("click", (e) => {
-          e.preventDefault();
-          const projectTech = button.closest(".project-tech");
-          const hiddenTags = projectTech?.querySelector(".tech-hidden");
-
-          if (hiddenTags) {
-            const isHidden = (hiddenTags as HTMLElement).style.display === "none";
-            (hiddenTags as HTMLElement).style.display = isHidden ? "contents" : "none";
-            button.textContent = isHidden ? "أقل" : `+${(button as HTMLElement).dataset.hiddenCount}`;
-            button.setAttribute("aria-expanded", isHidden.toString());
-          }
-        });
+        if (hiddenTags) {
+          const isHidden = (hiddenTags as HTMLElement).style.display === "none";
+          (hiddenTags as HTMLElement).style.display = isHidden ? "contents" : "none";
+          button.textContent = isHidden ? "أقل" : `+${(button as HTMLElement).dataset.hiddenCount}`;
+          button.setAttribute("aria-expanded", isHidden.toString());
+        }
       });
     });
   });
